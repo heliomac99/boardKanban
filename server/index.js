@@ -1,0 +1,150 @@
+// Create express app
+var express = require("express")
+var db = require("./database.js")
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const sqlite3 = require('sqlite3');
+
+
+const app = express();
+
+app.use(morgan('tiny'));
+app.use(cors());
+app.use(bodyParser.json());
+var HTTP_PORT = 8000 
+
+app.listen(HTTP_PORT, () => {
+    console.log("Server running on port %PORT%".replace("%PORT%",HTTP_PORT))
+});
+
+app.get("/", (req, res, next) => {
+    res.json({"message":"Ok"})
+});
+
+app.get("/card", (req, res, next) => {
+    var sql = "select * from card"
+    var params = []
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.json({
+            "data":rows
+        })
+      });
+});
+
+app.post("/autor", (req, res, next) => {
+    var sql = "select * from autor"
+    var params = []
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.send(rows)
+      });
+});
+
+app.get("/autor", (req, res, next) => {
+    var sql = "select * from autor"
+    var params = []
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.json({
+            "data":rows
+        })
+      });
+});
+
+
+app.post("/listarBackLog", (req, res) => {
+    var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 1 "
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.json({
+            "data":rows
+        })
+      });
+});
+
+app.post("/listarDesenvolvimento", (req, res) => {
+    var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 2"
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.json({
+            "data":rows
+        })
+      });
+});
+
+app.post("/listarFinalizado", (req, res) => {
+    var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 3"
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.json({
+            "data":rows
+        })
+      });
+});
+
+app.post("/moverCard", (req, res) => {
+    let sql = "update card set estagio = ? where id = ?"
+    let estagio = req.body.estagio
+    let id = req.body.id
+
+    db.all(sql, [estagio, id], (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.json("")
+      });
+});
+
+app.post('/card/add', (req, res) => {
+    let sql = `INSERT INTO card (titulo, descricao, autorId, estagio) VALUES (?,?,?,?)`
+    let titulo = req.body.titulo
+    let descricao = req.body.descricao
+    let autorId = req.body.autorId
+    let estagio = req.body.estagio
+
+    db.run(sql, [titulo, descricao, autorId, estagio], function (err, result){
+        if(err)
+            throw err
+        else{
+            res.json("")
+        }
+    })
+});
+
+app.post('/autor/add', (req, res) => {
+    let sql = `INSERT INTO autor (nome, email) VALUES (?,?)`
+    let nome = req.body.nome
+    let email = req.body.email
+    db.run(sql, [nome, email], function (err, result){
+        if(err)
+            throw err
+        else{
+            res.json("")
+        }
+    })
+});
+
+app.use(function(req, res){
+    res.status(404);
+});
