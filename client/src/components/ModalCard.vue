@@ -10,7 +10,6 @@
           <div class="modal-body" style="padding-top:40px">
             <ValidationForm :model="card" ref="validation" @save="salvar(card)">
               <div class="form-group col-10">
-                <!-- <label class="col-form-label col-2">Autor</label> -->
                 <div class="col-12">
                   <select name="autorId" class="form-select" v-model="card.autorId">
                     <option value="" disabled selected>Autor</option>
@@ -21,7 +20,6 @@
               </div>
 
               <div class="form-group col-10">  
-                  <!-- <label class="col-form-label col-2">Título</label> -->
                   <div class="col-12">
                     <input placeholder="Título" name="titulo" v-model="card.titulo" type="text" class="form-control">
                     <span name="titulo" class="spanErro"></span>  
@@ -29,7 +27,6 @@
               </div>
 
               <div class="form-group col-10">
-                <!-- <label class="col-form-label col-2">Descrição</label> -->
                 <textarea placeholder="Descrição" name="descricao" v-model="card.descricao" class="form-control"></textarea>              
               </div>
         
@@ -54,12 +51,14 @@
     data(){
       return {
         card:{
+          id: 0,
           titulo: "",
           descricao: "",
           estagio: 1,
           autorId: 0
         },
-        autores:[]
+        autores:[],
+        edit: false
       }
     },
     methods:{
@@ -68,19 +67,35 @@
           this.card.descricao = ""
       },
       salvar(card){
-        console.log(card)
-        axios.post("http://localhost:8000/card/add", card,)
-            .then(() => {
-                this.fechar()
-                this.$emit('refresh')
-                this.limparCampos()
-            })
-            .catch((error) => {
-                this.fechar()
-                console.log(error);
-            });
+        if(!this.edit){
+          axios.post("http://localhost:8000/card/add", card,).then(() => {
+              this.fechar()
+              this.$emit('refresh')
+              this.limparCampos()
+          })
+          .catch((error) => {
+              this.fechar()
+              console.log(error);
+          });
+        }
+        else{
+          axios.post("http://localhost:8000/card/edit", card,).then(() => {
+              this.fechar()
+              this.$emit('refresh')
+              this.limparCampos()
+          })
+          .catch((error) => {
+              this.fechar()
+              console.log(error);
+          });
+        }
       },
-      abrir(){
+      abrir(id){
+        this.card.id = id
+        if(id > 0){
+          this.edit = true
+          this.carregarCard(id)
+        }
         this.carregarAutores()
         document.getElementById('abrir').click();
       },
@@ -90,7 +105,13 @@
       carregarAutores(){
         axios.post("http://localhost:8000/autor",).then( (result) => {
           this.autores = result.data
-          console.log(this.autores)
+        } )
+      },
+      carregarCard(id){
+        axios.post("http://localhost:8000/card/carregarRegistro",{ "id" : id },).then( (result) => {
+          this.card.titulo = result.data[0].titulo
+          this.card.descricao = result.data[0].descricao
+          this.card.autorId = result.data[0].autorId
         } )
       }
     },

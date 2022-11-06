@@ -8,10 +8,11 @@
             <h5 class="card-title secondaryColor">BackLog</h5>  
 
           <div class="card cardTask" v-for="card in cardsBacklog" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id)" >
-            <div class="card-body">
+            <div>
+              <font-awesome-icon style="float:right" icon="fa-solid fa-pen" @click="edit(card.id)" />
               <h5>{{card.titulo}}</h5>
               <p>{{"Autor: "  + card.nomeAutor}}</p>
-            </div>
+            </div>    
           </div>
 
         </div>
@@ -22,10 +23,11 @@
           <h5 class="card-title secondaryColor">Em Desenvolvimento</h5>
 
           <div class="card cardTask" v-for="card in cardsDesenvolvimento" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id)">
-            <div class="card-body">
+            <div>
+              <font-awesome-icon style="float:right" icon="fa-solid fa-pen" @click="edit(card.id)"/>
               <h5>{{card.titulo}}</h5>
               <p>{{"Autor: "  + card.nomeAutor}}</p>
-            </div>
+            </div> 
           </div>
 
         </div>
@@ -36,10 +38,11 @@
           <h5 class="card-title secondaryColor">Finalizado</h5>
 
           <div class="card cardTask" v-for="card in cardsFinalizado" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id)">
-            <div class="card-body">
+            <div>
+              <font-awesome-icon style="float:right" icon="fa-solid fa-pen" @click="edit(card.id)"/>
               <h5>{{card.titulo}}</h5>
               <p>{{"Autor: "  + card.nomeAutor}}</p>
-            </div>
+            </div> 
           </div>
 
         </div>
@@ -88,6 +91,9 @@ export default {
       this.estagioSelecionado = e.target.getAttribute('estagio')
       axios.post("http://localhost:8000/moverCard", {estagio: this.estagioSelecionado, id: this.idCardSelecionado}).then( () => { this.carregarCards() })
     },
+    edit(id){
+      this.$refs.modal.abrir(id)
+    }
   },
   mounted(){
     this.carregarCards()

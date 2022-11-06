@@ -117,6 +117,36 @@ app.post('/card/add', (req, res) => {
     })
 });
 
+app.post('/card/edit', (req, res) => {
+    let sql = `UPDATE card SET titulo = ?, descricao = ?, autorId = ? WHERE id = ?`
+    let titulo = req.body.titulo
+    let descricao = req.body.descricao
+    let autorId = req.body.autorId
+    let id = req.body.id
+
+    db.run(sql, [titulo, descricao, autorId, id], function (err, result){
+        if(err)
+            throw err
+        else{
+            res.json("")
+        }
+    })
+});
+
+app.post('/card/carregarRegistro', (req, res) => {
+    let sql = `SELECT * FROM card WHERE id = ?`
+    let id = req.body.id
+    db.all(sql, [id], (err, rows) => {
+        console.log(rows)
+        if (err) {
+            console.error(err.message);
+            res.status(500).send({message: err.message});
+        } else {
+            res.status(200).send(rows);
+        }
+    });
+});
+
 app.post('/autor/add', (req, res) => {
     let sqlEmail = `SELECT * FROM autor Where email = ?`
     let sqlUpdate = `INSERT INTO autor (nome, email) VALUES (?,?)`
@@ -182,6 +212,7 @@ app.post('/autor/carregarRegistro', (req, res) => {
         }
     });
 });
+
 app.use(function(req, res){
     res.status(404);
 });
