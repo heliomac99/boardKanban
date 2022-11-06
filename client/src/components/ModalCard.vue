@@ -7,13 +7,13 @@
             <h5 class="modal-title" id="modalLabel">Criação de Card</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body" style="padding-top:40px">
             <ValidationForm :model="card" ref="validation" @save="salvar(card)">
               <div class="form-group col-10">
-                <label class="col-form-label col-2">Autor</label>
-                <div class="col-10">
+                <!-- <label class="col-form-label col-2">Autor</label> -->
+                <div class="col-12">
                   <select name="autorId" class="form-select" v-model="card.autorId">
-                    <option selected></option>
+                    <option value="" disabled selected>Autor</option>
                     <option v-for="autor in autores" :value="autor.id" :key="autor.id">{{autor.nome}}</option>
                   </select>  
                   <span name="autorId" class="spanErro"></span>  
@@ -21,16 +21,16 @@
               </div>
 
               <div class="form-group col-10">  
-                  <label class="col-form-label col-2">Título</label>
-                  <div class="col-10">
-                    <input name="titulo" v-model="card.titulo" type="text" class="form-control">
+                  <!-- <label class="col-form-label col-2">Título</label> -->
+                  <div class="col-12">
+                    <input placeholder="Título" name="titulo" v-model="card.titulo" type="text" class="form-control">
                     <span name="titulo" class="spanErro"></span>  
                   </div>
               </div>
 
               <div class="form-group col-10">
-                <label class="col-form-label col-2">Descrição</label>
-                <textarea name="descricao" v-model="card.descricao" class="form-control"></textarea>              
+                <!-- <label class="col-form-label col-2">Descrição</label> -->
+                <textarea placeholder="Descrição" name="descricao" v-model="card.descricao" class="form-control"></textarea>              
               </div>
         
               <div style="margin-top:50px">

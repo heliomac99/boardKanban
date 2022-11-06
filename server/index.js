@@ -118,14 +118,27 @@ app.post('/card/add', (req, res) => {
 });
 
 app.post('/autor/add', (req, res) => {
-    let sql = `INSERT INTO autor (nome, email) VALUES (?,?)`
+    let sqlEmail = `SELECT * FROM autor Where email = ?`
+    let sqlUpdate = `INSERT INTO autor (nome, email) VALUES (?,?)`
     let nome = req.body.nome
     let email = req.body.email
-    db.run(sql, [nome, email], function (err, result){
+
+    db.all(sqlEmail, [email], (err, rows) => {
         if(err)
             throw err
         else{
-            res.json("")
+            if(rows.length > 0){
+                res.send({emailValido: false})
+                return;
+            }
+            db.run(sqlUpdate, [nome, email], (err) => {
+                if (err) {
+                    res.status(500).send({ message: err.message });
+                } else {
+                    res.status(200).send({ emailValido: true });
+                }
+            });
+            
         }
     })
 });
@@ -159,19 +172,16 @@ app.post('/autor/delete', (req, res) => {
 app.post('/autor/carregarRegistro', (req, res) => {
     let sql = `SELECT * FROM autor WHERE id = ?`
     let id = req.body.id
-    db.run(sql, [id], function (err, rows){
-        if(err){
-            console.log(err)
-            throw err
+    db.all(sql, [id], (err, rows) => {
+        console.log(rows)
+        if (err) {
+            console.error(err.message);
+            res.status(500).send({message: err.message});
+        } else {
+            res.status(200).send(rows);
         }
-        else{
-            res.json({
-                "data":rows
-            })
-        }
-    })
+    });
 });
-
 app.use(function(req, res){
     res.status(404);
 });

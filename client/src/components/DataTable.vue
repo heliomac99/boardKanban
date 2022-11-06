@@ -15,7 +15,7 @@
                     <button v-if="showAddButton" style="margin-left:10px;" type="button" @click="$emit('addItem', item[id] )" class="btn btn-primary primaryColorBtn">
                         <font-awesome-icon icon="fa-solid fa-plus" />
                     </button>
-                    <button title="Excluir"  v-if="showRemoveButton" style="margin-left:10px;" type="button" @click="$emit('excluir', item )" class="btn btn-secondary primaryColorBtn">
+                    <button title="Excluir"  v-if="showRemoveButton" style="margin-left:10px;" type="button" @click="$emit('excluir', item )" class="btn btn-secondary secondaryColorBtn">
                         <font-awesome-icon icon="fa-solid fa-trash" />
                     </button>
 

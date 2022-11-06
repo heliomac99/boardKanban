@@ -102,7 +102,7 @@ export default {
 <style>
 
 .cardTask{
-  background-color: #53a548;
+  background-color: #19381f;
   color:white;
   max-height: 150px;
 }

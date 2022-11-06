@@ -28,8 +28,13 @@ a{
 }
 
 .primaryColorBtn{
-  background-color:#53a548 !important;
-  border-color: #53a548 !important
+  background-color:#bc6c25 !important;
+  border-color: #bc6c25 !important
+}
+
+.secondaryColorBtn{
+  background-color:#19381f !important;
+  border-color: #19381f !important
 }
 
 .secondaryColor{

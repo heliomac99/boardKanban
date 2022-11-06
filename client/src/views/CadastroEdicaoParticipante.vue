@@ -3,7 +3,7 @@
         <h3 class="primaryColor" >Cadastro Participante</h3>
         <div align="center">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body" style="padding-top:35px; padding-bottom:30px">
                     <ValidationForm :model="participante" ref="validation" @save="salvar(participante)">
                         <div class="form-group col-10">
                             <label class="form-label col-2" style="margin-right:20px">Nome</label>
@@ -21,9 +21,9 @@
                             </div>
                         </div>
 
-                        <div id="actionButtons" style="margin-top:20px">
-                            <button @click="excluir(participante)" type="button" style="margin-right: 5px;" class="btn btn-secondary primaryColorBtn2">Excluir</button>
-                            <button type="submit" class="btn btn-success primaryColorBtn">Salvar</button>
+                        <div id="actionButtons" style="margin-top:50px">
+                            <button @click="excluir(participante)" type="button" style="margin-right: 5px;" class="btn btn-secondary primaryColorBtn">Excluir</button>
+                            <button type="submit" class="btn btn-success secondaryColorBtn">Salvar</button>
                             <ModalPergunta ref="modalPergunta"></ModalPergunta>
                         </div>
                     </ValidationForm>
@@ -58,9 +58,14 @@
                     )
                 }
                 else{
-                    axios.post('http://localhost:8000/autor/add', participante).then(
-                        this.$swal("Sucesso", "Paciente registrado com sucesso!", "success"),
-                        this.$router.back()
+                    axios.post('http://localhost:8000/autor/add', participante).then( (res) =>{
+                            if(!res.data.emailValido)
+                                this.$refs.validation.insereErro("email", "E-mail já está sendo utilizado.")
+                            else{
+                                this.$swal("Sucesso", "Participante registrado com sucesso!", "success"),
+                                this.$router.back()
+                            }
+                        }
                     )
                 }      
             },           
@@ -81,8 +86,8 @@
             recuperarDados() { 
                 axios.post('http://localhost:8000/autor/carregarRegistro', {id: this.participante.id}).then( (result) => {
                     console.log(result)
-                    // this.participante.email = result.data[0].email
-                    // this.participante.nome = result.data[0].nome                
+                    this.participante.email = result.data[0].email
+                    this.participante.nome = result.data[0].nome                
                    }
                 )
             },

@@ -1,16 +1,19 @@
-<template>
+﻿<template>
   <div align="center">
     <h3 class="secondaryColor" style="margin-bottom:40px">Lista Participantes</h3>
     <button class="btn btn-primary primaryColorBtn" @click="inserir" style="margin-bottom:20px">Inserir Participante <font-awesome-icon icon="fa-solid fa-plus"/></button>
-    <DataTable ref="dataTable" :colLabels="colLabels" :dataFields="dataFields" :dataUrl="'http://localhost:8000/autor'" :showEditButton="true" :showRemoveButton="true" @editar="editar" :key="dataTableKey" :id="'id'"></DataTable>
+    <DataTable ref="dataTable" :colLabels="colLabels" :dataFields="dataFields" :dataUrl="'http://localhost:8000/autor'" :showEditButton="true" :showRemoveButton="true" @editar="editar" @excluir="excluir" :key="dataTableKey" :id="'id'"></DataTable>
+    <ModalPergunta ref="modalPergunta"></ModalPergunta>
   </div>
 </template>
 
 <script>
+import ModalPergunta from '../components/ModalPergunta.vue'
 import DataTable from '../components/DataTable.vue'
+import axios from 'axios'
 export default {
   name: 'ListaParticipanteView',
-  components: { DataTable },
+  components: { DataTable, ModalPergunta },
   data(){
     return {
       colLabels: ['Nome', 'E-mail'],
@@ -24,9 +27,22 @@ export default {
     },
     editar(participante){
       this.$router.push({ name: 'cadastroedicaoparticipante', params: { codigoParticipante: participante.id } })
-    }
-  }
+    },
+    async excluir(participante) { 
+      const ok = await this.$refs.modalPergunta.show({
+          title: 'Excluir Participante',
+          message: 'Tem certeza que gostaria de excluir o participante?',
+          okButton: 'Sim',
+      })
 
+      if (ok) {
+          axios.post('http://localhost:8000/autor/delete', {id: participante.id}).then(() => { 
+              this.$swal("Sucesso", "Participante excluído com sucesso!", "success")
+              this.dataTableKey++
+          })
+      }
+    },
+  },
 }
 </script>
 
