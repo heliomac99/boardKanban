@@ -48,21 +48,6 @@ app.post("/autor", (req, res, next) => {
       });
 });
 
-app.get("/autor", (req, res, next) => {
-    var sql = "select * from autor"
-    var params = []
-    db.all(sql, params, (err, rows) => {
-        if (err) {
-          res.status(400).json({"error":err.message});
-          return;
-        }
-        res.json({
-            "data":rows
-        })
-      });
-});
-
-
 app.post("/listarBackLog", (req, res) => {
     var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 1 "
     db.all(sql, [], (err, rows) => {
@@ -141,6 +126,48 @@ app.post('/autor/add', (req, res) => {
             throw err
         else{
             res.json("")
+        }
+    })
+});
+
+app.post('/autor/update', (req, res) => {
+    let sql = `UPDATE autor SET nome = ?, email = ? WHERE id = ?`
+    let id = req.body.id
+    let nome = req.body.nome
+    let email = req.body.email
+    db.run(sql, [nome, email, id], function (err, result){
+        if(err)
+            throw err
+        else{
+            res.json("")
+        }
+    })
+});
+
+app.post('/autor/delete', (req, res) => {
+    let sql = `DELETE FROM autor WHERE id = ?`
+    let id = req.body.id
+    db.run(sql, [id], function (err, result){
+        if(err)
+            throw err
+        else{
+            res.send("")
+        }
+    })
+});
+
+app.post('/autor/carregarRegistro', (req, res) => {
+    let sql = `SELECT * FROM autor WHERE id = ?`
+    let id = req.body.id
+    db.run(sql, [id], function (err, rows){
+        if(err){
+            console.log(err)
+            throw err
+        }
+        else{
+            res.json({
+                "data":rows
+            })
         }
     })
 });

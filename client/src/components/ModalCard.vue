@@ -11,16 +11,18 @@
             <ValidationForm :model="card" ref="validation" @save="salvar(card)">
               <div class="form-group col-10">
                 <label class="col-form-label col-2">Autor</label>
-                <select name="autorId" class="form-select" v-model="card.autorId">
-                  <option selected></option>
-                  <option v-for="autor in autores" :value="autor.id" :key="autor.id">{{autor.nome}}</option>
-                </select>  
-                <span name="autorId" class="spanErro"></span>          
+                <div class="col-10">
+                  <select name="autorId" class="form-select" v-model="card.autorId">
+                    <option selected></option>
+                    <option v-for="autor in autores" :value="autor.id" :key="autor.id">{{autor.nome}}</option>
+                  </select>  
+                  <span name="autorId" class="spanErro"></span>  
+                </div>        
               </div>
 
               <div class="form-group col-10">  
                   <label class="col-form-label col-2">Título</label>
-                  <div class="col-12">
+                  <div class="col-10">
                     <input name="titulo" v-model="card.titulo" type="text" class="form-control">
                     <span name="titulo" class="spanErro"></span>  
                   </div>
@@ -33,7 +35,7 @@
         
               <div style="margin-top:50px">
                 <button id="fechar" type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="margin-right:10px">Cancelar</button>
-                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button type="submit" class="btn btn-primary primaryColorBtn">Salvar</button>
               </div>
             </ValidationForm>
           </div>
@@ -103,9 +105,6 @@
   <style>
     .mr-2{
       margin-right: 20px;
-    }
-    .form-group{
-      /* margin-bottom: 10px; */
     }
   </style>
   

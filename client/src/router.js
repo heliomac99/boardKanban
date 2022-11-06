@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import BoardView from './views/Board.vue'
-import ListaAutorView from './views/ListaAutor.vue'
+import ListaParticipanteView from './views/ListaParticipante.vue'
+import CadastroEdicaoParticipanteView from './views/CadastroEdicaoParticipante.vue'
 
 const routes = [
     {
@@ -9,10 +10,16 @@ const routes = [
         component: BoardView,
     },
     {
-        path: '/ListaAutor',
-        name: 'ListaAutor',
-        component: ListaAutorView,
+        path: '/ListaParticipante',
+        name: 'ListaParticipante',
+        component: ListaParticipanteView,
     },
+    {
+        path: '/Participante/CadastroEdicao/:codigoParticipante',
+        name: 'cadastroedicaoparticipante',
+        component: CadastroEdicaoParticipanteView,
+    },
+
     
 ]
 

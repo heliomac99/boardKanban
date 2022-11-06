@@ -1,13 +1,14 @@
 <template>
   <div align="center">
-    <button class="btn btn-secondary insere" @click="abrirModal"><font-awesome-icon icon="fa-solid fa-plus"/></button>
+    <div ref="fakeDragImage" class="fakeDragImage"/>
+    <button class="btn btn-secondary insere primaryColorBtn" @click="abrirModal">Inserir Task <font-awesome-icon icon="fa-solid fa-plus"/></button>
     <div style="display:flex; justify-content:center">
       <div class="card colunm drop-zone" @drop="soltou($event)" @dragover.prevent="">
-        <div class="card-body" estagio="1">
-            <h5 class="card-title">BackLog</h5>  
+        <div class="card-body board" estagio="1">
+            <h5 class="card-title secondaryColor">BackLog</h5>  
 
-          <div class="card" v-for="card in cardsBacklog" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id)" >
-            <div class="card-body" style="height: 100px;">
+          <div class="card cardTask" v-for="card in cardsBacklog" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id)" >
+            <div class="card-body">
               <h5>{{card.titulo}}</h5>
               <p>{{"Autor: "  + card.nomeAutor}}</p>
             </div>
@@ -17,11 +18,11 @@
       </div>
 
       <div class="card colunm drop-zone" @drop="soltou($event)" @dragover.prevent="">
-        <div class="card-body" estagio="2">
-          <h5 class="card-title">Em Desenvolvimento</h5>
+        <div class="card-body board" estagio="2">
+          <h5 class="card-title secondaryColor">Em Desenvolvimento</h5>
 
-          <div class="card" v-for="card in cardsDesenvolvimento" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id)">
-            <div class="card-body" style="height: 100px;">
+          <div class="card cardTask" v-for="card in cardsDesenvolvimento" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id)">
+            <div class="card-body">
               <h5>{{card.titulo}}</h5>
               <p>{{"Autor: "  + card.nomeAutor}}</p>
             </div>
@@ -31,11 +32,11 @@
       </div>
 
       <div class="card colunmLast drop-zone" @drop="soltou($event)" @dragover.prevent="">
-        <div class="card-body" estagio="3">
-          <h5 class="card-title">Finalizado</h5>
+        <div class="card-body board" estagio="3">
+          <h5 class="card-title secondaryColor">Finalizado</h5>
 
-          <div class="card" v-for="card in cardsFinalizado" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id)">
-            <div class="card-body" style="height: 100px;">
+          <div class="card cardTask" v-for="card in cardsFinalizado" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id)">
+            <div class="card-body">
               <h5>{{card.titulo}}</h5>
               <p>{{"Autor: "  + card.nomeAutor}}</p>
             </div>
@@ -85,7 +86,6 @@ export default {
     },
     soltou(e){
       this.estagioSelecionado = e.target.getAttribute('estagio')
-      console.log(this.estagioSelecionado, this.idCardSelecionado)
       axios.post("http://localhost:8000/moverCard", {estagio: this.estagioSelecionado, id: this.idCardSelecionado}).then( () => { this.carregarCards() })
     },
   },
@@ -101,6 +101,12 @@ export default {
 
 <style>
 
+.cardTask{
+  background-color: #53a548;
+  color:white;
+  max-height: 150px;
+}
+
 .colunm{
   width: 30rem;
   min-height: 80vh !important;
@@ -112,14 +118,8 @@ export default {
   min-height: 80vh !important;
 }
 
-.card-body{
-  font-family: 'Roboto Mono', monospace;
-}
-
 .insere{
-  padding:initial;
   margin-bottom: 30px;
-  width:25px;
 }
 .spanErro{
   font-size: small;

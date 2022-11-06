@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th style="width:20%" v-if="showEditButton || showRemoveButton || showAddButton"></th>
-                <th v-for="(value, index) in colLabels" :key="index" class="primaryColor" scope="col">{{value}}</th>
+                <th v-for="(value, index) in colLabels" :key="index" class="secondaryColor" scope="col">{{value}}</th>
             </tr>
         </thead>
         <tbody>

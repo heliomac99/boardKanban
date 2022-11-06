@@ -2,7 +2,7 @@
   <div>
     <nav class="navbar navbar-light bg-light">
       <router-link to="/Board" class="nav-link">Board</router-link>
-      <router-link to="/ListaAutor" class="nav-link">Autores</router-link>
+      <router-link to="/ListaParticipante" class="nav-link">Participantes</router-link>
     </nav>
     <router-view></router-view>
   </div>
@@ -25,5 +25,22 @@ export default {
 
 a{
   margin-left: 20px !important;
+}
+
+.primaryColorBtn{
+  background-color:#53a548 !important;
+  border-color: #53a548 !important
+}
+
+.secondaryColor{
+  color: #19381f !important;
+}
+
+.spanErro{
+  float: left;
+}
+
+body{
+  font-family: 'Roboto Mono', monospace !important;
 }
 </style>

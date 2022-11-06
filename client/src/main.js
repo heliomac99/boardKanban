@@ -10,6 +10,8 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import router from './router'
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 /* add icons to the library */
 library.add(faPlus)
@@ -19,6 +21,7 @@ library.add(faTrash)
 
 createApp(App)
 .component('font-awesome-icon', FontAwesomeIcon)
+.use(VueSweetalert2)
 .use(VueAxios, axios)
 .use(router)
 .mount('#app')
