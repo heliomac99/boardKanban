@@ -1,51 +1,31 @@
 <template>
   <div align="center">
-    <div ref="fakeDragImage" class="fakeDragImage"/>
-    <button class="btn btn-secondary insere primaryColorBtn" @click="abrirModal(0)">Inserir Task <font-awesome-icon icon="fa-solid fa-plus"/></button>
-    <div style="display:flex; justify-content:center">
-      <div class="card colunm drop-zone" @drop="soltou($event)" @dragover.prevent="">
-        <div class="card-body board" estagio="1">
-            <h5 class="card-title secondaryColor">BackLog</h5>  
+    <div class="col-2" style="margin-bottom: 30px;">
+      <select class="form-select" v-model="boardSelecionado" @change="carregarColunas()">
+        <option selected></option>
+        <option v-for="board in boards" :value="board.id" :key="board.id">{{board.nome}}</option>
+      </select>
+    </div>
 
-          <div class="card cardTask" v-for="card in cardsBacklog" @dblclick="edit(card.id)" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id)" >
+    <button v-if="primeiraColunaBoardSelecionado" class="btn btn-secondary insere primaryColorBtn" @click="abrirModal(0, primeiraColunaBoardSelecionado)">Inserir Task <font-awesome-icon icon="fa-solid fa-plus"/></button>
+    
+    <div style="display:flex; justify-content:center">
+
+      <div class="card colunm drop-zone" @drop="soltou(coluna.id)" @dragover.prevent="" v-for="coluna in colunas" :key="coluna.id">
+        <div class="card-body board">
+          <h5 class="card-title secondaryColor">{{coluna.nome}}</h5>  
+          <div class="card cardTask" v-for="card in coluna.cards" @dblclick="edit(card.id)" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id)" >
             <div>
               <h5>{{card.titulo}}</h5>
               <p v-if="card.autorId > 0">{{"Autor: "  + card.nomeAutor}}</p>
             </div>    
           </div>
-
         </div>
       </div>
 
-      <div class="card colunm drop-zone" @drop="soltou($event)" @dragover.prevent="">
-        <div class="card-body board" estagio="2">
-          <h5 class="card-title secondaryColor">Em Desenvolvimento</h5>
-
-          <div class="card cardTask" v-for="card in cardsDesenvolvimento" @dblclick="edit(card.id)" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id)">
-            <div>
-              <h5>{{card.titulo}}</h5>
-              <p v-if="card.autorId > 0">{{"Autor: "  + card.nomeAutor}}</p>
-            </div> 
-          </div>
-
-        </div>
-      </div>
-
-      <div class="card colunmLast drop-zone" @drop="soltou($event)" @dragover.prevent="">
-        <div class="card-body board" estagio="3">
-          <h5 class="card-title secondaryColor">Finalizado</h5>
-
-          <div class="card cardTask" v-for="card in cardsFinalizado" @dblclick="edit(card.id)" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id)">
-            <div>
-              <h5>{{card.titulo}}</h5>
-              <p v-if="card.autorId > 0">{{"Autor: "  + card.nomeAutor}}</p>
-            </div> 
-          </div>
-
-        </div>
-      </div>
     </div>
-    <ModalCard ref="modal" @refresh="carregarCards"></ModalCard>
+
+    <ModalCard ref="modal" @refresh="carregarColunas"></ModalCard>
   </div>
 
 </template>
@@ -58,35 +38,44 @@ export default {
   components: { ModalCard },
   data(){
     return{
-      cardsBacklog:[],
-      cardsDesenvolvimento:[],
-      cardsFinalizado:[],
       idCardSelecionado: 0,
-      estagioSelecionado: null
+      boards:[],
+      colunas: [],
+      boardSelecionado:null,
+      primeiraColunaBoardSelecionado: null
     }
   },
   methods:{
-    abrirModal(){
-      this.$refs.modal.abrir()
+    abrirModal(id, idBoardSelecionado){
+      this.$refs.modal.abrir(id, idBoardSelecionado)
     },
-    carregarCards(){
-      axios.post("http://localhost:8000/listarBackLog").then((res) => {
-                this.cardsBacklog = res.data.data
+    carregarBoards(){
+      axios.post("http://localhost:8000/board").then((res) => {
+            this.boards = res.data
       })
-      axios.post("http://localhost:8000/listarDesenvolvimento").then((res) => {
-                this.cardsDesenvolvimento = res.data.data
-      })
-      axios.post("http://localhost:8000/listarFinalizado").then((res) => {
-                this.cardsFinalizado = res.data.data
-      })
+    },
+    carregarColunas(){
+      axios.post('http://localhost:8000/coluna/carregarPorBoard', { "boardId" : this.boardSelecionado }).then( (result) => {
+            this.colunas = result.data
 
+            if(this.colunas[0])
+              this.primeiraColunaBoardSelecionado = this.colunas[0].id
+            else
+              this.primeiraColunaBoardSelecionado = null
+
+            this.colunas.forEach(element => {
+              axios.post('http://localhost:8000/card/carregarPorColuna', { "colunaId" : element.id }).then( (result) => {
+                    element.cards = result.data
+                    console.log(element)
+              })
+            })
+      })
     },
     moveu(id){
       this.idCardSelecionado = id
     },
-    soltou(e){
-      this.estagioSelecionado = e.target.getAttribute('estagio')
-      axios.post("http://localhost:8000/moverCard", {estagio: this.estagioSelecionado, id: this.idCardSelecionado}).then( () => { this.carregarCards() })
+    soltou(colunaId){
+      axios.post("http://localhost:8000/moverCard", { "colunaId": colunaId, id: this.idCardSelecionado}).then( () => { this.carregarColunas() })
     },
     edit(id){
       this.$refs.modal.abrir(id)
@@ -96,12 +85,8 @@ export default {
     }
   },
   mounted(){
-    this.carregarCards()
+    this.carregarBoards()
   }
-
-
-
-
 }
 </script>
 

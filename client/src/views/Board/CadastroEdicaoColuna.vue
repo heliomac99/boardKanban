@@ -65,17 +65,21 @@
             }
         },
         methods: {
+            limpar(){
+                this.coluna.nome = null
+                this.coluna.ordem =  null
+            },
             insere(nome, ordem){
-                let coluna = {"nome": nome, "ordem": ordem, "idBoard": this.$route.params.codigoBoard}
-                axios.post('http://localhost:8000/coluna/add', coluna).then( this.carregarColunas() )
+                let coluna = {"nome": nome, "ordem": ordem, "boardId": this.$route.params.codigoBoard}
+                axios.post('http://localhost:8000/coluna/add', coluna).then( () => {this.carregarColunas(), this.limpar()} )
             },
             carregarColunas(){
-                axios.post('http://localhost:8000/coluna/carregarPorBoard', { "idBoard" : this.$route.params.codigoBoard }).then( (result) => {
+                axios.post('http://localhost:8000/coluna/carregarPorBoard', { "boardId" : this.$route.params.codigoBoard }).then( (result) => {
                     this.colunas = result.data
                 } )
             },
             excluir(id){
-                axios.post('http://localhost:8000/coluna/delete', { "id": id}).then( this.carregarColunas() )
+                axios.post('http://localhost:8000/coluna/delete', { "id" : id}).then( () =>{ this.carregarColunas() } )
             }
         },
         mounted(){

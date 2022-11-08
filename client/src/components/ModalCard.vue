@@ -57,8 +57,8 @@
           id: 0,
           titulo: "",
           descricao: "",
-          estagio: 1,
-          autorId: 0
+          autorId: 0,
+          colunaId: 0
         },
         autores:[],
         edit: false
@@ -70,8 +70,9 @@
           this.card.descricao = ""
       },
       salvar(card){
+        console.log(card)
         if(!this.edit){
-          axios.post("http://localhost:8000/card/add", card,).then(() => {
+          axios.post("http://localhost:8000/card/add", card).then(() => {
               this.fechar()
               this.$emit('refresh')
               this.limparCampos()
@@ -82,7 +83,7 @@
           });
         }
         else{
-          axios.post("http://localhost:8000/card/edit", card,).then(() => {
+          axios.post("http://localhost:8000/card/edit", card).then(() => {
               this.fechar()
               this.$emit('refresh')
               this.limparCampos()
@@ -93,8 +94,9 @@
           });
         }
       },
-      abrir(id){
+      abrir(id, colunaId){
         this.card.id = id
+        this.card.colunaId = colunaId
 
         if(id > 0){
           this.edit = true
@@ -119,6 +121,7 @@
           this.card.titulo = result.data[0].titulo
           this.card.descricao = result.data[0].descricao
           this.card.autorId = result.data[0].autorId
+          this.$refs.validation.validar()
         })
       },
       async excluir(id) { 

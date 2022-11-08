@@ -15,8 +15,9 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
             titulo text NOT NULL, 
             descricao text,
             autorId INTEGER,
-            estagio int NOT NULL,
+            colunaId INTEGER,
             FOREIGN KEY (autorId) REFERENCES Autor(id)
+            FOREIGN KEY (colunaId) REFERENCES Coluna(id)
             )`,
         );
 
@@ -35,8 +36,8 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome text,
             ordem INTEGER NOT NULL,
-            idBoard INTEGER,
-            FOREIGN KEY (idBoard) REFERENCES Board(id)
+            boardId INTEGER,
+            FOREIGN KEY (boardId) REFERENCES Board(id)
         )`);
     }
 });

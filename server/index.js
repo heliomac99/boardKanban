@@ -88,11 +88,11 @@ app.post("/listarFinalizado", (req, res) => {
 });
 
 app.post("/moverCard", (req, res) => {
-    let sql = "update card set estagio = ? where id = ?"
-    let estagio = req.body.estagio
+    let sql = "update card set colunaId = ? where id = ?"
+    let colunaId = req.body.colunaId
     let id = req.body.id
 
-    db.all(sql, [estagio, id], (err, rows) => {
+    db.all(sql, [colunaId, id], (err, rows) => {
         if (err) {
           res.status(400).json({"error":err.message});
           return;
@@ -102,13 +102,13 @@ app.post("/moverCard", (req, res) => {
 });
 
 app.post('/card/add', (req, res) => {
-    let sql = `INSERT INTO card (titulo, descricao, autorId, estagio) VALUES (?,?,?,?)`
+    let sql = `INSERT INTO card (titulo, descricao, autorId, colunaId) VALUES (?,?,?,?)`
     let titulo = req.body.titulo
     let descricao = req.body.descricao
     let autorId = req.body.autorId
-    let estagio = req.body.estagio
+    let colunaId = req.body.colunaId
 
-    db.run(sql, [titulo, descricao, autorId, estagio], function (err, result){
+    db.run(sql, [titulo, descricao, autorId, colunaId], function (err, result){
         if(err)
             throw err
         else{
@@ -302,12 +302,12 @@ app.post('/board/carregarRegistro', (req, res) => {
 
 
 app.post('/coluna/add', (req, res) => {
-    let sql = `INSERT INTO coluna (nome, ordem, idBoard) VALUES (?,?,?)`
+    let sql = `INSERT INTO coluna (nome, ordem, boardId) VALUES (?,?,?)`
     let nome = req.body.nome
     let ordem = req.body.ordem
-    let idBoard = req.body.idBoard
+    let boardId = req.body.boardId
 
-    db.run(sql, [nome, ordem, idBoard], function (err, result){
+    db.run(sql, [nome, ordem, boardId], function (err, result){
         if(err)
             throw err
         else{
@@ -330,21 +330,28 @@ app.post("/coluna", (req, res, next) => {
 
 app.post('/coluna/delete', (req, res) => {
     let sql = `DELETE from coluna WHERE id = ?`
+    let deleteCards = `DELETE from card WHERE colunaId = ?`
     let id = req.body.id
 
-    db.run(sql, [id], function (err, result){
+    db.run(sql, [id], function (err){
         if(err)
             throw err
         else{
-            res.json("")
+            db.run(deleteCards, [id], function (err){
+                if(err)
+                    throw err
+                else{
+                    res.json("")
+                }
+            })
         }
     })
 });
 
-app.post("/coluna/carregarPorBoard", (req, res, next) => {
-    var sql = "select * from coluna WHERE idBoard = ?"
-    let idBoard = req.body.idBoard
-    db.all(sql, [idBoard], (err, rows) => {
+app.post("/coluna/carregarPorBoard", (req, res) => {
+    var sql = "select * from coluna WHERE boardId = ? ORDER BY ordem"
+    let boardId = req.body.boardId
+    db.all(sql, [boardId], (err, rows) => {
         if (err) {
           res.status(400).json({"error":err.message});
           return;
@@ -353,8 +360,17 @@ app.post("/coluna/carregarPorBoard", (req, res, next) => {
       });
 });
 
-
-
+app.post("/card/carregarPorColuna", (req, res) => {
+    var sql = "select C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor, A.id as autorId from card C LEFT JOIN autor A ON A.id = C.autorId WHERE colunaId = ?"
+    let colunaId = req.body.colunaId
+    db.all(sql, [colunaId], (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.send(rows)
+      });
+});
 
 app.use(function(req, res){
     res.status(404);
