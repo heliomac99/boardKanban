@@ -2,7 +2,7 @@
   <div align="center">
     <h3 class="secondaryColor" style="margin-bottom:40px">Lista Boards</h3>
     <button class="btn btn-primary primaryColorBtn" @click="inserir" style="margin-bottom:20px">Inserir Board <font-awesome-icon icon="fa-solid fa-plus"/></button>
-    <DataTable ref="dataTable" :colLabels="colLabels" :dataFields="dataFields" :dataUrl="'http://localhost:8000/board'" :showEditButton="true" :showRemoveButton="true" @editar="editar" @excluir="excluir" :key="dataTableKey" :id="'id'"></DataTable>
+    <DataTable ref="dataTable" :colLabels="colLabels" :dataFields="dataFields" :dataUrl="'http://localhost:8000/board'" :showEditButton="true" :showRemoveButton="true" :showAddButton="true" @editar="editar" @excluir="excluir" @addItem="coluna" :key="dataTableKey" :id="'id'"></DataTable>
     <ModalPergunta ref="modalPergunta"></ModalPergunta>
   </div>
 </template>
@@ -42,6 +42,9 @@ export default {
           )
       }
     },
+    coluna(id){
+      this.$router.push({ name: 'CadastroEdicaoColuna', params: { codigoBoard: id } })
+    }
   },
 }
 </script>

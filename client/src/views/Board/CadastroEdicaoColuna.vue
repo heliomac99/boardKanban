@@ -1,0 +1,98 @@
+<template>
+    <div align="center">
+        <h3 class="primaryColor" >Cadastro Coluna</h3>
+        <ValidationForm :model="coluna" ref="validation" @save="insere(coluna.nome, coluna.ordem)">
+            <div class="card cardColuna">
+                <div class="card-body" style="margin-top:20px">
+                    <div class="form-group col-10">
+                        <label class="form-label col-2">Colunas</label>
+                        <div class="col-6">
+                            <input v-model="coluna.nome" placeholder="nome" class="form-control">
+                            <span name="nome" class="spanErro"></span>  
+                        </div>
+                        <div class="col-2" style="margin-left:20px;">
+                            <input v-model="coluna.ordem" placeholder="ordem" class="form-control"> 
+                            <span name="ordem" class="spanErro"></span>  
+                        </div>
+                        <button type="submit" class="btn btn-primary primaryColorBtn" style="margin-left:40px; height:40px">
+                            <font-awesome-icon icon="fa-solid fa-plus"/>
+                        </button>
+                    </div>
+
+                    <div class="form-group col-10">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col" style="width:80px"></th>
+                                    <th scope="col">Nome</th>
+                                    <th scope="col" style="width:80px">Ordem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="coluna in colunas" :key="coluna.nome">
+                                    <td style="display:flex; justify-content:center">
+                                        <button type="button" class="btn btn-primary primaryColorBtn" @click="excluir(coluna.id)">
+                                            <font-awesome-icon icon="fa-solid fa-trash"/>
+                                        </button>
+                                    </td>
+                                    <td>{{coluna.nome}}</td>
+                                    <td>{{coluna.ordem}}</td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </ValidationForm>
+    </div>
+</template>
+
+<script>
+  import ValidationForm from '../../components/ValidationForm.vue'
+  import axios from 'axios'
+
+  export default {
+        name: 'CadastroEdicaoColunaView',
+        components: {ValidationForm },
+        data() {
+            return {
+                colunas: [],
+                coluna:{
+                    nome: null,
+                    ordem: null
+                }
+            }
+        },
+        methods: {
+            insere(nome, ordem){
+                let coluna = {"nome": nome, "ordem": ordem, "idBoard": this.$route.params.codigoBoard}
+                axios.post('http://localhost:8000/coluna/add', coluna).then( this.carregarColunas() )
+            },
+            carregarColunas(){
+                axios.post('http://localhost:8000/coluna/carregarPorBoard', { "idBoard" : this.$route.params.codigoBoard }).then( (result) => {
+                    this.colunas = result.data
+                } )
+            },
+            excluir(id){
+                axios.post('http://localhost:8000/coluna/delete', { "id": id}).then( this.carregarColunas() )
+            }
+        },
+        mounted(){
+            this.$refs.validation.required('nome','Nome')
+            this.$refs.validation.required('ordem','Ordem')
+            this.carregarColunas()
+        }
+
+        
+    }
+</script>
+
+<style>
+
+.cardColuna{
+    padding: 0
+}
+
+</style>
+

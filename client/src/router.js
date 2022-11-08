@@ -6,6 +6,8 @@ import CadastroEdicaoParticipanteView from './views/Participante/CadastroEdicaoP
 import CadastroEdicaoBoardView from './views/Board/CadastroEdicaoBoard.vue'
 import ListaBoardView from './views/Board/ListaBoard.vue'
 
+
+import CadastroEdicaoColunaView from './views/Board/CadastroEdicaoColuna.vue'
 const routes = [
     {
         path: '/Board',
@@ -31,6 +33,11 @@ const routes = [
         path: '/ListaBoard',
         name: 'ListaBoard',
         component: ListaBoardView,
+    },
+    {
+        path: '/Board/CadastroEdicaoColuna/:codigoBoard',
+        name: 'CadastroEdicaoColuna',
+        component: CadastroEdicaoColunaView,
     },
 
     

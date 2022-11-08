@@ -300,6 +300,62 @@ app.post('/board/carregarRegistro', (req, res) => {
     });
 });
 
+
+app.post('/coluna/add', (req, res) => {
+    let sql = `INSERT INTO coluna (nome, ordem, idBoard) VALUES (?,?,?)`
+    let nome = req.body.nome
+    let ordem = req.body.ordem
+    let idBoard = req.body.idBoard
+
+    db.run(sql, [nome, ordem, idBoard], function (err, result){
+        if(err)
+            throw err
+        else{
+            res.json("")
+        }
+    })
+});
+
+app.post("/coluna", (req, res, next) => {
+    var sql = "select * from coluna"
+    var params = []
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.send(rows)
+      });
+});
+
+app.post('/coluna/delete', (req, res) => {
+    let sql = `DELETE from coluna WHERE id = ?`
+    let id = req.body.id
+
+    db.run(sql, [id], function (err, result){
+        if(err)
+            throw err
+        else{
+            res.json("")
+        }
+    })
+});
+
+app.post("/coluna/carregarPorBoard", (req, res, next) => {
+    var sql = "select * from coluna WHERE idBoard = ?"
+    let idBoard = req.body.idBoard
+    db.all(sql, [idBoard], (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.send(rows)
+      });
+});
+
+
+
+
 app.use(function(req, res){
     res.status(404);
 });

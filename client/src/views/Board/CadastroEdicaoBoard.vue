@@ -10,7 +10,7 @@
                             <label class="form-label col-2" style="margin-right:20px">Nome</label>
                             <div class="col-10" >
                                 <input v-model="board.nome" id="nome" class="form-control"> 
-                                    <span name="nome" class="spanErro"></span>     
+                                <span name="nome" class="spanErro"></span>     
                             </div>
                         </div>
 
@@ -32,17 +32,26 @@
   import axios from 'axios'
 
   export default {
-        name: 'CadastroEdicaoParticipanteView',
+        name: 'CadastroEdicaoBoardView',
         components: { ModalPergunta, ValidationForm },
         data() {
             return {
                 board: {
                     id: this.$route.params.codigoBoard,
                     nome: null,
+                    colunas: []
                 },
+                coluna:{
+                    nomeColuna: null,
+                    ordemColuna: null
+                }
             }
         },
         methods: {
+            insereColuna(nome, ordem){
+                let coluna = {"nome": nome, "ordem": ordem, "idBoard": this.board.id}
+                axios.post('http://localhost:8000/coluna/add', coluna)
+            },
             salvar(board) { 
                 if(board.id > 0){
                     axios.post('http://localhost:8000/board/update', board).then(
@@ -90,6 +99,10 @@
 </script>
 
 <style>
+
+.cardColuna{
+    padding: 0
+}
 
 </style>
 
