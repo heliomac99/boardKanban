@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import BoardView from './views/Board.vue'
-import ListaParticipanteView from './views/ListaParticipante.vue'
-import CadastroEdicaoParticipanteView from './views/CadastroEdicaoParticipante.vue'
+import ListaParticipanteView from './views/Participante/ListaParticipante.vue'
+import CadastroEdicaoParticipanteView from './views/Participante/CadastroEdicaoParticipante.vue'
 
 const routes = [
     {

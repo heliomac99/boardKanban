@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import ModalPergunta from '../components/ModalPergunta.vue'
-import DataTable from '../components/DataTable.vue'
+import ModalPergunta from '../../components/ModalPergunta.vue'
+import DataTable from '../../components/DataTable.vue'
 import axios from 'axios'
 export default {
   name: 'ListaParticipanteView',

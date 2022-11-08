@@ -34,8 +34,8 @@
 </template>
 
 <script>
-  import ModalPergunta from '../components/ModalPergunta.vue'
-  import ValidationForm from '../components/ValidationForm.vue'
+  import ModalPergunta from '../../components/ModalPergunta.vue'
+  import ValidationForm from '../../components/ValidationForm.vue'
   import axios from 'axios'
   export default {
         name: 'CadastroEdicaoParticipanteView',
