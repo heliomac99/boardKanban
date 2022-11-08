@@ -12,7 +12,7 @@
               <div class="form-group col-10">
                 <div class="col-12">
                   <select name="autorId" class="form-select" v-model="card.autorId">
-                    <option value="" disabled selected>Autor</option>
+                    <option value="" selected></option>
                     <option v-for="autor in autores" :value="autor.id" :key="autor.id">{{autor.nome}}</option>
                   </select>  
                   <span name="autorId" class="spanErro"></span>  
@@ -31,10 +31,12 @@
               </div>
         
               <div style="margin-top:50px">
-                <button id="fechar" type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="margin-right:10px">Cancelar</button>
+                <button id="fechar" type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="margin-right:10px" hidden>Cancelar</button>
+                <button type="button" class="btn btn-secondary" style="margin-right:10px" @click="excluir(card.id)">Excluir</button>
                 <button type="submit" class="btn btn-primary primaryColorBtn">Salvar</button>
               </div>
             </ValidationForm>
+            <ModalPergunta ref="modalPergunta"></ModalPergunta>
           </div>
         </div>
       </div>
@@ -44,10 +46,11 @@
   <script>
   import axios from "axios";
   import ValidationForm from './ValidationForm.vue'
+  import ModalPergunta from '../components/ModalPergunta.vue'
   
   export default {
     name: 'ModalCard',
-    components: { ValidationForm },
+    components: { ValidationForm, ModalPergunta },
     data(){
       return {
         card:{
@@ -92,10 +95,14 @@
       },
       abrir(id){
         this.card.id = id
+
         if(id > 0){
           this.edit = true
           this.carregarCard(id)
         }
+        else
+          this.edit = false
+        
         this.carregarAutores()
         document.getElementById('abrir').click();
       },
@@ -112,12 +119,26 @@
           this.card.titulo = result.data[0].titulo
           this.card.descricao = result.data[0].descricao
           this.card.autorId = result.data[0].autorId
-        } )
-      }
+        })
+      },
+      async excluir(id) { 
+                const ok = await this.$refs.modalPergunta.show({
+                    title: 'Excluir card',
+                    message: 'Tem certeza que gostaria de excluir o card?',
+                    okButton: 'Sim',
+                })
+
+                if (ok) {
+                    axios.post('http://localhost:8000/card/delete', {id: id}).then(() => { 
+                        this.fechar()
+                        this.$emit('refresh')
+                        this.limparCampos()
+                    })
+                }
+            },
     },
     mounted(){
         this.$refs.validation.required('titulo', 'Título')
-        this.$refs.validation.required('autorId', 'Autor')
     }
 
   }

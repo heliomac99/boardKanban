@@ -22,7 +22,7 @@
                         </div>
 
                         <div id="actionButtons" style="margin-top:50px">
-                            <button @click="excluir(participante)" type="button" style="margin-right: 5px;" class="btn btn-secondary primaryColorBtn">Excluir</button>
+                            <button v-if="participante.id > 0" @click="excluir(participante)" type="button" style="margin-right: 5px;" class="btn btn-secondary primaryColorBtn">Excluir</button>
                             <button type="submit" class="btn btn-success secondaryColorBtn">Salvar</button>
                             <ModalPergunta ref="modalPergunta"></ModalPergunta>
                         </div>
@@ -71,8 +71,8 @@
             },           
             async excluir(participante) { 
                 const ok = await this.$refs.modalPergunta.show({
-                    title: 'Excluir Relatório',
-                    message: 'Tem certeza que gostaria de excluir o relatório?',
+                    title: 'Excluir participante',
+                    message: 'Tem certeza que gostaria de excluir o participante?',
                     okButton: 'Sim',
                 })
 

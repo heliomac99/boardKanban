@@ -49,7 +49,7 @@ app.post("/autor", (req, res, next) => {
 });
 
 app.post("/listarBackLog", (req, res) => {
-    var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 1 "
+    var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor, C.autorId as autorId from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 1 "
     db.all(sql, [], (err, rows) => {
         if (err) {
           res.status(400).json({"error":err.message});
@@ -62,7 +62,7 @@ app.post("/listarBackLog", (req, res) => {
 });
 
 app.post("/listarDesenvolvimento", (req, res) => {
-    var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 2"
+    var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor, C.autorId as autorId from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 2"
     db.all(sql, [], (err, rows) => {
         if (err) {
           res.status(400).json({"error":err.message});
@@ -75,7 +75,7 @@ app.post("/listarDesenvolvimento", (req, res) => {
 });
 
 app.post("/listarFinalizado", (req, res) => {
-    var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 3"
+    var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor, C.autorId as autorId from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 3"
     db.all(sql, [], (err, rows) => {
         if (err) {
           res.status(400).json({"error":err.message});
@@ -133,11 +133,23 @@ app.post('/card/edit', (req, res) => {
     })
 });
 
+app.post('/card/delete', (req, res) => {
+    let sql = `DELETE from card WHERE id = ?`
+    let id = req.body.id
+
+    db.run(sql, [id], function (err, result){
+        if(err)
+            throw err
+        else{
+            res.json("")
+        }
+    })
+});
+
 app.post('/card/carregarRegistro', (req, res) => {
     let sql = `SELECT * FROM card WHERE id = ?`
     let id = req.body.id
     db.all(sql, [id], (err, rows) => {
-        console.log(rows)
         if (err) {
             console.error(err.message);
             res.status(500).send({message: err.message});
@@ -189,12 +201,24 @@ app.post('/autor/update', (req, res) => {
 
 app.post('/autor/delete', (req, res) => {
     let sql = `DELETE FROM autor WHERE id = ?`
+    let sqlCard = `SELECT * from card WHERE autorId = ?`
     let id = req.body.id
-    db.run(sql, [id], function (err, result){
+
+    db.all(sqlCard,[id], (err, rows) =>{
         if(err)
             throw err
         else{
-            res.send("")
+            if(rows.length > 0){
+                res.send({ podeExcluir: false })
+                return; 
+            }
+            db.run(sql, [id], function (err, result){
+                if(err)
+                    throw err
+                else{
+                    res.send({ podeExcluir: true })
+                }
+            })
         }
     })
 });

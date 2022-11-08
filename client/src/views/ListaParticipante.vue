@@ -36,9 +36,13 @@ export default {
       })
 
       if (ok) {
-          axios.post('http://localhost:8000/autor/delete', {id: participante.id}).then(() => { 
-              this.$swal("Sucesso", "Participante excluído com sucesso!", "success")
-              this.dataTableKey++
+          axios.post('http://localhost:8000/autor/delete', {id: participante.id}).then((result) => {
+              if(result.data.podeExcluir){
+                this.$swal("Sucesso", "Participante excluído com sucesso!", "success")
+                this.dataTableKey++
+              }
+              else
+                this.$swal("Erro", "Participante possui vínculo com algum Card!", "error")
           })
       }
     },
