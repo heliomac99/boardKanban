@@ -77,6 +77,7 @@
                     this.originalData = result.data
                     this.filteredData = this.originalData
                     //this.dataFormater()
+                    console.log(result)
                 })
             }
             else{

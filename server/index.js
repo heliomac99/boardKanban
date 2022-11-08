@@ -227,7 +227,70 @@ app.post('/autor/carregarRegistro', (req, res) => {
     let sql = `SELECT * FROM autor WHERE id = ?`
     let id = req.body.id
     db.all(sql, [id], (err, rows) => {
-        console.log(rows)
+        if (err) {
+            console.error(err.message);
+            res.status(500).send({message: err.message});
+        } else {
+            res.status(200).send(rows);
+        }
+    });
+});
+
+app.post("/board", (req, res, next) => {
+    var sql = "select * from board"
+    var params = []
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.send(rows)
+      });
+});
+
+app.post('/board/add', (req, res) => {
+    let sql = `INSERT INTO board (nome) VALUES (?)`
+    let nome = req.body.nome
+
+    db.run(sql, [nome], function (err, result){
+        if(err)
+            throw err
+        else{
+            res.json("")
+        }
+    })
+});
+
+app.post('/board/update', (req, res) => {
+    let sql = `UPDATE board SET nome = ? WHERE id = ?`
+    let id = req.body.id
+    let nome = req.body.nome
+    db.run(sql, [nome, id], function (err, result){
+        if(err)
+            throw err
+        else{
+            res.json("")
+        }
+    })
+});
+
+app.post('/board/delete', (req, res) => {
+    let sql = `DELETE from board WHERE id = ?`
+    let id = req.body.id
+
+    db.run(sql, [id], function (err, result){
+        if(err)
+            throw err
+        else{
+            res.json("")
+        }
+    })
+});
+
+app.post('/board/carregarRegistro', (req, res) => {
+    let sql = `SELECT * FROM board WHERE id = ?`
+    let id = req.body.id
+    db.all(sql, [id], (err, rows) => {
         if (err) {
             console.error(err.message);
             res.status(500).send({message: err.message});

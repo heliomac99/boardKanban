@@ -71,7 +71,7 @@
             },           
             async excluir(participante) { 
                 const ok = await this.$refs.modalPergunta.show({
-                    title: 'Excluir participante',
+                    title: 'Excluir Participante',
                     message: 'Tem certeza que gostaria de excluir o participante?',
                     okButton: 'Sim',
                 })
@@ -85,7 +85,6 @@
             },
             recuperarDados() { 
                 axios.post('http://localhost:8000/autor/carregarRegistro', {id: this.participante.id}).then( (result) => {
-                    console.log(result)
                     this.participante.email = result.data[0].email
                     this.participante.nome = result.data[0].nome                
                    }
