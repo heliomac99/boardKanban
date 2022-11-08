@@ -32,7 +32,7 @@
         
               <div style="margin-top:50px">
                 <button id="fechar" type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="margin-right:10px" hidden>Cancelar</button>
-                <button type="button" class="btn btn-secondary" style="margin-right:10px" @click="excluir(card.id)">Excluir</button>
+                <button type="button" v-if="card.id > 0" class="btn btn-secondary" style="margin-right:10px" @click="excluir(card.id)">Excluir</button>
                 <button type="submit" class="btn btn-primary primaryColorBtn">Salvar</button>
               </div>
             </ValidationForm>

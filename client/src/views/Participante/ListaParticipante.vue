@@ -23,10 +23,10 @@ export default {
   },
   methods: {
     inserir(){
-      this.$router.push({ name: 'cadastroedicaoparticipante', params: { codigoParticipante: 0 } })
+      this.$router.push({ name: 'CadastroEdicaoParticipante', params: { codigoParticipante: 0 } })
     },
     editar(participante){
-      this.$router.push({ name: 'cadastroedicaoparticipante', params: { codigoParticipante: participante.id } })
+      this.$router.push({ name: 'CadastroEdicaoParticipante', params: { codigoParticipante: participante.id } })
     },
     async excluir(participante) { 
       const ok = await this.$refs.modalPergunta.show({

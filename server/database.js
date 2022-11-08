@@ -10,13 +10,13 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
       throw err
     }else{
         console.log('Connected to the SQLite database.')
-        db.run(`CREATE TABLE IF NOT EXISTS card (
+        db.run(`CREATE TABLE IF NOT EXISTS Card (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             titulo text NOT NULL, 
             descricao text,
             autorId INTEGER,
             estagio int NOT NULL,
-            FOREIGN KEY (autorId) REFERENCES Persons(id)
+            FOREIGN KEY (autorId) REFERENCES Autor(id)
             )`,
         );
 
@@ -25,6 +25,19 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
             nome text,
             email text UNIQUE
         )`); 
+
+        db.run(`CREATE TABLE IF NOT EXISTS Board (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome text
+        )`); 
+
+        db.run(`CREATE TABLE IF NOT EXISTS Coluna (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome text,
+            ordem INTEGER NOT NULL,
+            idBoard INTEGER,
+            FOREIGN KEY (idBoard) REFERENCES Board(id)
+        )`);
     }
 });
 

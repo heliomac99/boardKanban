@@ -1,8 +1,9 @@
 <template>
   <div>
     <nav class="navbar navbar-light bg-light">
-      <router-link to="/Board" class="nav-link">Board</router-link>
+      <router-link to="/Board" class="nav-link">Home</router-link>
       <router-link to="/ListaParticipante" class="nav-link">Participantes</router-link>
+      <router-link to="/ListaBoard" class="nav-link">Boards</router-link>
     </nav>
     <router-view></router-view>
   </div>

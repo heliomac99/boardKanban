@@ -3,6 +3,9 @@ import BoardView from './views/Board.vue'
 import ListaParticipanteView from './views/Participante/ListaParticipante.vue'
 import CadastroEdicaoParticipanteView from './views/Participante/CadastroEdicaoParticipante.vue'
 
+import CadastroEdicaoBoardView from './views/Board/CadastroEdicaoBoard.vue'
+import ListaBoardView from './views/Board/ListaBoard.vue'
+
 const routes = [
     {
         path: '/Board',
@@ -16,8 +19,18 @@ const routes = [
     },
     {
         path: '/Participante/CadastroEdicao/:codigoParticipante',
-        name: 'cadastroedicaoparticipante',
+        name: 'CadastroEdicaoParticipante',
         component: CadastroEdicaoParticipanteView,
+    },
+    {
+        path: '/Board/CadastroEdicao/:codigoBoard',
+        name: 'CadastroEdicaoBoard',
+        component: CadastroEdicaoBoardView,
+    },
+    {
+        path: '/ListaBoard',
+        name: 'ListaBoard',
+        component: ListaBoardView,
     },
 
     
