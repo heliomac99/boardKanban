@@ -1,5 +1,5 @@
 <template>
-  <div align="center">
+  <div align="center" @click="fecharMenu()">
     <div class="col-2" style="margin-bottom: 30px;">
       <select class="form-select" v-model="boardSelecionado" @change="carregarColunas()">
         <option selected></option>
@@ -7,17 +7,17 @@
       </select>
     </div>
 
-    <button v-if="primeiraColunaBoardSelecionado" class="btn btn-secondary insere primaryColorBtn" @click="abrirModal(0, primeiraColunaBoardSelecionado)">Inserir Task <font-awesome-icon icon="fa-solid fa-plus"/></button>
+    <button v-if="primeiraColuna" class="btn btn-secondary insere primaryColorBtn" @click="abrirModal(0, primeiraColuna)">Inserir Task <font-awesome-icon icon="fa-solid fa-plus"/></button>
     
-    <div style="display:flex; justify-content:center">
+    <div style="display:flex; justify-content:center" id="divBoard">
 
       <div class="card colunm drop-zone" @drop="soltou(coluna.id)" @dragover.prevent="" v-for="coluna in colunas" :key="coluna.id">
         <div class="card-body board">
           <h5 class="card-title secondaryColor">{{coluna.nome}}</h5>  
-          <div class="card cardTask" v-for="card in coluna.cards" @dblclick="edit(card.id)" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id)" >
+          <div class="card cardTask" v-for="card in coluna.cards" @dblclick="edit(card.id)" @contextmenu.prevent="abrirMenu($event, card)" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id)" >
             <div>
               <h5>{{card.titulo}}</h5>
-              <p v-if="card.autorId > 0">{{"Autor: "  + card.nomeAutor}}</p>
+              <h8 v-if="card.autorId > 0">{{"Autor: "  + card.nomeAutor}}</h8>
             </div>    
           </div>
         </div>
@@ -25,6 +25,10 @@
 
     </div>
 
+    <ul id="menu" class="list-group">
+      <li class="list-group-item menuItem" @click="abrirModal(idCardSelecionado, idColunaSelecionada)">Abrir</li>
+      <li class="list-group-item menuItem" @click="excluir(idCardSelecionado)">Excluir</li>
+    </ul>
     <ModalCard ref="modal" @refresh="carregarColunas"></ModalCard>
   </div>
 
@@ -33,21 +37,36 @@
 <script>
 import ModalCard from '../components/ModalCard.vue'
 import axios from "axios";
+
 export default {
   name: 'BoardView',
   components: { ModalCard },
   data(){
     return{
       idCardSelecionado: 0,
+      idColunaSelecionada: 0,
       boards:[],
       colunas: [],
       boardSelecionado:null,
-      primeiraColunaBoardSelecionado: null
+      primeiraColuna: null,
     }
   },
   methods:{
-    abrirModal(id, idBoardSelecionado){
-      this.$refs.modal.abrir(id, idBoardSelecionado)
+    abrirMenu(e, card){
+      this.idCardSelecionado = card.id;
+      this.idColunaSelecionada = card.colunaId;
+      const menu = document.getElementById("menu");
+      let x = e.clientX, y = e.clientY
+      menu.style.visibility = 'visible'
+      menu.style.top = `${y}px`
+      menu.style.left = `${x}px`
+    },
+    fecharMenu(){
+      const menu = document.getElementById("menu");
+      menu.style.visibility = 'hidden'
+    },
+    abrirModal(id, colunaId){
+      this.$refs.modal.abrir(id, colunaId)
     },
     carregarBoards(){
       axios.post("http://localhost:8000/board").then((res) => {
@@ -59,14 +78,13 @@ export default {
             this.colunas = result.data
 
             if(this.colunas[0])
-              this.primeiraColunaBoardSelecionado = this.colunas[0].id
+              this.primeiraColuna = this.colunas[0].id
             else
-              this.primeiraColunaBoardSelecionado = null
+              this.primeiraColuna = null
 
             this.colunas.forEach(element => {
               axios.post('http://localhost:8000/card/carregarPorColuna', { "colunaId" : element.id }).then( (result) => {
                     element.cards = result.data
-                    console.log(element)
               })
             })
       })
@@ -81,7 +99,7 @@ export default {
       this.$refs.modal.abrir(id)
     },
     excluir(id){
-      axios.post("http://localhost:8000/card/delete", {id: id}).then( () => { this.carregarCards() })
+      axios.post("http://localhost:8000/card/delete", {id: id}).then( () => { this.carregarColunas() })
     }
   },
   mounted(){
@@ -92,21 +110,26 @@ export default {
 
 <style>
 
+#divBoard{
+  padding: 10px;
+}
+
 .cardTask{
   background-color: #19381f;
   color:white;
-  max-height: 150px;
+  min-height: 100px;
 }
 
 .colunm{
-  width: 30rem;
+  width: 30rem !important;
   min-height: 80vh !important;
-  margin-right: 30px;
+  margin-right: 10px;
 }
 
 .colunmLast{
-  width: 30rem;
+  width: 30rem !important;
   min-height: 80vh !important;
+  margin-right: 0px !important;
 }
 
 .insere{
@@ -122,6 +145,21 @@ export default {
 
 .card-title{
   margin-bottom: 20px !important;
+}
+
+.card{
+  padding: 10px !important;
+}
+
+#menu{
+  width: 200px;
+  height:300px;
+  visibility: hidden;
+  position:absolute;
+}
+
+.menuItem:hover{
+  background-color:darkgray ;
 }
 
 </style>

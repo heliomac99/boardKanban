@@ -11,7 +11,7 @@
                             <span name="nome" class="spanErro"></span>  
                         </div>
                         <div class="col-2" style="margin-left:20px;">
-                            <input v-model="coluna.ordem" placeholder="ordem" class="form-control"> 
+                            <input v-model="coluna.ordem" placeholder="ordem" type="number" min="0" class="form-control"> 
                             <span name="ordem" class="spanErro"></span>  
                         </div>
                         <button type="submit" class="btn btn-primary primaryColorBtn" style="margin-left:40px; height:40px">

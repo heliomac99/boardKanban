@@ -361,7 +361,7 @@ app.post("/coluna/carregarPorBoard", (req, res) => {
 });
 
 app.post("/card/carregarPorColuna", (req, res) => {
-    var sql = "select C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor, A.id as autorId from card C LEFT JOIN autor A ON A.id = C.autorId WHERE colunaId = ?"
+    var sql = "select C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor, A.id as autorId, C.colunaId as colunaId from card C LEFT JOIN autor A ON A.id = C.autorId WHERE colunaId = ?"
     let colunaId = req.body.colunaId
     db.all(sql, [colunaId], (err, rows) => {
         if (err) {
