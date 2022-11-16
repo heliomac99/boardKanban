@@ -14,7 +14,7 @@
       <div class="card colunm drop-zone" @drop="soltou(coluna.id)" @dragover.prevent="" v-for="coluna in colunas" :key="coluna.id">
         <div class="card-body board">
           <h5 class="card-title secondaryColor">{{coluna.nome}}</h5>  
-          <div class="card cardTask" v-for="card in coluna.cards" @dblclick="edit(card.id)" @contextmenu.prevent="abrirMenu($event, card)" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id)" >
+          <div class="card cardTask" v-for="card in coluna.cards" @dblclick="edit(card.id)" @contextmenu.prevent="abrirMenu($event, card)" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id, coluna.id)" >
             <div>
               <h5>{{card.titulo}}</h5>
               <h8 v-if="card.autorId > 0">{{"Autor: "  + card.nomeAutor}}</h8>
@@ -22,13 +22,9 @@
           </div>
         </div>
       </div>
-
     </div>
 
-    <ul id="menu" class="list-group">
-      <li class="list-group-item menuItem" @click="abrirModal(idCardSelecionado, idColunaSelecionada)">Abrir</li>
-      <li class="list-group-item menuItem" @click="excluir(idCardSelecionado)">Excluir</li>
-    </ul>
+    <MenuCard ref="menu"></MenuCard>
     <ModalCard ref="modal" @refresh="carregarColunas"></ModalCard>
   </div>
 
@@ -36,34 +32,28 @@
 
 <script>
 import ModalCard from '../components/ModalCard.vue'
+import MenuCard from '../components/MenuCard.vue'
 import axios from "axios";
 
 export default {
   name: 'BoardView',
-  components: { ModalCard },
+  components: { ModalCard, MenuCard },
   data(){
     return{
       idCardSelecionado: 0,
-      idColunaSelecionada: 0,
+      idColunaOrigem: 0,
       boards:[],
       colunas: [],
       boardSelecionado:null,
       primeiraColuna: null,
     }
   },
-  methods:{
+  methods:{ 
     abrirMenu(e, card){
-      this.idCardSelecionado = card.id;
-      this.idColunaSelecionada = card.colunaId;
-      const menu = document.getElementById("menu");
-      let x = e.clientX, y = e.clientY
-      menu.style.visibility = 'visible'
-      menu.style.top = `${y}px`
-      menu.style.left = `${x}px`
+      this.$refs.menu.abrir(card, e.clientX, e.clientY)
     },
     fecharMenu(){
-      const menu = document.getElementById("menu");
-      menu.style.visibility = 'hidden'
+      this.$refs.menu.fechar()
     },
     abrirModal(id, colunaId){
       this.$refs.modal.abrir(id, colunaId)
@@ -89,11 +79,25 @@ export default {
             })
       })
     },
-    moveu(id){
+    carregarColunaAlteradas(colunaIdDest, colunaIdOrigem){
+      var indexDest = this.colunas.findIndex(x => x.id == colunaIdDest)
+      var indexOrigem = this.colunas.findIndex(x => x.id == colunaIdOrigem)
+
+      axios.post('http://localhost:8000/card/carregarPorColuna', { "colunaId" : colunaIdDest }).then( (result) => {
+            this.colunas[indexDest].cards = result.data
+      })
+
+      axios.post('http://localhost:8000/card/carregarPorColuna', { "colunaId" : colunaIdOrigem }).then( (result) => {
+            this.colunas[indexOrigem].cards = result.data
+      })
+    },
+    moveu(id, idColunaOrigem){
+      this.fecharMenu()
+      this.idColunaOrigem = idColunaOrigem
       this.idCardSelecionado = id
     },
-    soltou(colunaId){
-      axios.post("http://localhost:8000/moverCard", { "colunaId": colunaId, id: this.idCardSelecionado}).then( () => { this.carregarColunas() })
+    soltou(idColunaDestino){
+      axios.post("http://localhost:8000/moverCard", { "colunaId": idColunaDestino, id: this.idCardSelecionado}).then( () => { this.carregarColunaAlteradas(idColunaDestino, this.idColunaOrigem) })
     },
     edit(id){
       this.$refs.modal.abrir(id)
@@ -149,17 +153,6 @@ export default {
 
 .card{
   padding: 10px !important;
-}
-
-#menu{
-  width: 200px;
-  height:300px;
-  visibility: hidden;
-  position:absolute;
-}
-
-.menuItem:hover{
-  background-color:darkgray ;
 }
 
 </style>
