@@ -64,19 +64,8 @@ export default {
       })
     },
     carregarColunas(){
-      axios.post('http://localhost:8000/coluna/carregarPorBoard', { "boardId" : this.boardSelecionado }).then( (result) => {
-            this.colunas = result.data
-
-            if(this.colunas[0])
-              this.primeiraColuna = this.colunas[0].id
-            else
-              this.primeiraColuna = null
-
-            this.colunas.forEach(element => {
-              axios.post('http://localhost:8000/card/carregarPorColuna', { "colunaId" : element.id }).then( (result) => {
-                    element.cards = result.data
-              })
-            })
+      axios.post('http://localhost:8000/board/carregarBoard', { "boardId" : this.boardSelecionado }).then((result) => {
+        this.colunas = result.data
       })
     },
     carregarColunaAlteradas(colunaIdDest, colunaIdOrigem){

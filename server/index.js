@@ -348,30 +348,43 @@ app.post('/coluna/delete', (req, res) => {
     })
 });
 
-app.post("/coluna/carregarPorBoard", (req, res) => {
-    var sql = "select * from coluna WHERE boardId = ? ORDER BY ordem"
+app.post("/board/carregarBoard", (req, res) => {
+    var sql = "select c1.id as id, c1.boardId as boardId, c1.nome as nome, c1.ordem as ordem, c2.id as cardId, c2.titulo as titulo, c2.descricao as descricao, c2.autorId as autorId, a.nome as nomeAutor from coluna c1 LEFT JOIN card c2 on c1.id = c2.colunaId LEFT JOIN autor a on c2.autorId = a.id  WHERE c1.boardId = ? ORDER BY c1.ordem"
     let boardId = req.body.boardId
-    db.all(sql, [boardId], (err, rows) => {
-        if (err) {
-          res.status(400).json({"error":err.message});
-          return;
-        }
-        res.send(rows)
-      });
-});
+    let result = []
 
-app.post("/card/carregarPorColuna", (req, res) => {
-    var sql = "select C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor, A.id as autorId, C.colunaId as colunaId from card C LEFT JOIN autor A ON A.id = C.autorId WHERE colunaId = ?"
-    let colunaId = req.body.colunaId
-    db.all(sql, [colunaId], (err, rows) => {
-        if (err) {
-          res.status(400).json({"error":err.message});
-          return;
-        }
-        res.send(rows)
-      });
-});
+    db.all(sql, [boardId], (err, rows) => {
+        result = rows
+        
+        let uniqueColunms = []
+        var aux = 0
+
+        result.forEach(element => {
+            if(element.id != aux){
+                aux = element.id
+                uniqueColunms.push({"id": element.id, "boardId": element.boardId, "nome": element.nome, "ordem": element.ordem})
+            }
+        })
+        
+        uniqueColunms.forEach( element => {
+            element.cards = []
+            result.forEach( element2 => {
+                if(element.id == element2.id){
+                    if(element2.cardId > 0)
+                        element.cards.push({"id": element2.cardId, "titulo": element2.titulo, "descricao": element2.descricao, "autorId": element2.autorId, "nomeAutor": element2.nomeAutor })
+                    else
+                        return
+                }
+            })
+        })
+
+        res.send(uniqueColunms)
+        
+    })
+})
 
 app.use(function(req, res){
     res.status(404);
 });
+
+
