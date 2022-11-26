@@ -46,6 +46,9 @@
                                     </td>
                                     <td>{{coluna.nome}}</td>
                                     <td>{{coluna.ordem}}</td>
+                                    <td style="width:70px">
+                                        <input placeholder="Cor" type="color" class="form-control" :value="coluna.cor" @change="alteraCor(coluna, $event.target.value)">
+                                    </td>
                                 </tr>
                                 
                             </tbody>
@@ -75,6 +78,9 @@
             }
         },
         methods: {
+            alteraCor(coluna, cor){
+                axios.post('http://localhost:8000/coluna/alteraCor', {"colunaId": coluna.id, "cor": cor})
+            },
             limpar(){
                 this.coluna.nome = null
                 this.coluna.ordem =  null
@@ -87,7 +93,6 @@
             carregarColunas(){
                 axios.post('http://localhost:8000/coluna/carregarPorBoard', { "boardId" : this.$route.params.codigoBoard }).then( (result) => {
                     this.colunas = result.data
-                    console.log(result)
                 } )
             },
             excluir(id){

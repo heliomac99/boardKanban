@@ -317,6 +317,20 @@ app.post('/coluna/add', (req, res) => {
     })
 });
 
+app.post('/coluna/alteraCor', (req, res) => {
+    let sql = `UPDATE coluna SET cor = ? WHERE id = ?`
+    let cor = req.body.cor
+    let colunaId = req.body.colunaId
+
+    db.run(sql, [cor, colunaId], function (err, result){
+        if(err)
+            throw err
+        else{
+            res.json("")
+        }
+    })
+});
+
 app.post("/coluna", (req, res, next) => {
     var sql = "select * from coluna"
     var params = []
@@ -350,7 +364,7 @@ app.post('/coluna/delete', (req, res) => {
 });
 
 app.post("/coluna/carregarPorBoard", (req, res) => {
-    let sql = `select * from coluna where boardId = ?`
+    let sql = `select * from coluna where boardId = ? order by ordem`
     let boardId = req.body.boardId
 
     db.all(sql, [boardId], (err, rows) => {
