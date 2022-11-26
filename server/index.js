@@ -302,12 +302,13 @@ app.post('/board/carregarRegistro', (req, res) => {
 
 
 app.post('/coluna/add', (req, res) => {
-    let sql = `INSERT INTO coluna (nome, ordem, boardId) VALUES (?,?,?)`
+    let sql = `INSERT INTO coluna (nome, ordem, boardId, cor) VALUES (?,?,?, ?)`
     let nome = req.body.nome
     let ordem = req.body.ordem
     let boardId = req.body.boardId
+    let cor = req.body.cor
 
-    db.run(sql, [nome, ordem, boardId], function (err, result){
+    db.run(sql, [nome, ordem, boardId, cor], function (err, result){
         if(err)
             throw err
         else{
@@ -348,8 +349,23 @@ app.post('/coluna/delete', (req, res) => {
     })
 });
 
+app.post("/coluna/carregarPorBoard", (req, res) => {
+    let sql = `select * from coluna where boardId = ?`
+    let boardId = req.body.boardId
+
+    db.all(sql, [boardId], (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).send({message: err.message});
+        } else {
+            res.status(200).send(rows);
+        }
+    });
+});
+
+
 app.post("/board/carregarBoard", (req, res) => {
-    var sql = "select c1.id as id, c1.boardId as boardId, c1.nome as nome, c1.ordem as ordem, c2.id as cardId, c2.titulo as titulo, c2.descricao as descricao, c2.autorId as autorId, a.nome as nomeAutor from coluna c1 LEFT JOIN card c2 on c1.id = c2.colunaId LEFT JOIN autor a on c2.autorId = a.id  WHERE c1.boardId = ? ORDER BY c1.ordem"
+    var sql = "select c1.id as id, c1.boardId as boardId, c1.nome as nome, c1.ordem as ordem, c1.cor as cor, c2.id as cardId, c2.titulo as titulo, c2.descricao as descricao, c2.autorId as autorId, a.nome as nomeAutor from coluna c1 LEFT JOIN card c2 on c1.id = c2.colunaId LEFT JOIN autor a on c2.autorId = a.id  WHERE c1.boardId = ? ORDER BY c1.ordem"
     let boardId = req.body.boardId
     let result = []
 
@@ -362,7 +378,7 @@ app.post("/board/carregarBoard", (req, res) => {
         result.forEach(element => {
             if(element.id != aux){
                 aux = element.id
-                uniqueColunms.push({"id": element.id, "boardId": element.boardId, "nome": element.nome, "ordem": element.ordem})
+                uniqueColunms.push({"id": element.id, "boardId": element.boardId, "nome": element.nome, "ordem": element.ordem, "cor": element.cor})
             }
         })
         

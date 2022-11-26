@@ -1,24 +1,33 @@
 <template>
     <div align="center">
         <h3 class="primaryColor" >Cadastro Coluna</h3>
-        <ValidationForm :model="coluna" ref="validation" @save="insere(coluna.nome, coluna.ordem)">
+        <ValidationForm :model="coluna" ref="validation" @save="insere(coluna.nome, coluna.ordem, coluna.cor)">
             <div class="card cardColuna">
                 <div class="card-body" style="margin-top:20px">
                     <div class="form-group col-10">
                         <label class="form-label col-2">Colunas</label>
-                        <div class="col-6">
+                        <div class="col-3" style="margin-left:20px;">
                             <input v-model="coluna.nome" placeholder="nome" class="form-control">
                             <span name="nome" class="spanErro"></span>  
                         </div>
+
                         <div class="col-2" style="margin-left:20px;">
                             <input v-model="coluna.ordem" placeholder="ordem" type="number" min="0" class="form-control"> 
                             <span name="ordem" class="spanErro"></span>  
                         </div>
+
+                        <div class="col-1" style="margin-left:20px;">
+                            <input v-model="coluna.cor" placeholder="Cor" type="color" class="form-control">
+                            <span name="cor" class="spanErro"></span>  
+                        </div>
+
+                 
                         <button type="submit" class="btn btn-primary primaryColorBtn" style="margin-left:40px; height:40px">
                             <font-awesome-icon icon="fa-solid fa-plus"/>
                         </button>
                     </div>
 
+                    
                     <div class="form-group col-10">
                         <table class="table table-bordered">
                             <thead>
@@ -60,7 +69,8 @@
                 colunas: [],
                 coluna:{
                     nome: null,
-                    ordem: null
+                    ordem: null,
+                    cor: null
                 }
             }
         },
@@ -69,13 +79,15 @@
                 this.coluna.nome = null
                 this.coluna.ordem =  null
             },
-            insere(nome, ordem){
-                let coluna = {"nome": nome, "ordem": ordem, "boardId": this.$route.params.codigoBoard}
+            insere(nome, ordem, cor){
+                console.log
+                let coluna = {"nome": nome, "ordem": ordem, "boardId": this.$route.params.codigoBoard, "cor": cor}
                 axios.post('http://localhost:8000/coluna/add', coluna).then( () => {this.carregarColunas(), this.limpar()} )
             },
             carregarColunas(){
                 axios.post('http://localhost:8000/coluna/carregarPorBoard', { "boardId" : this.$route.params.codigoBoard }).then( (result) => {
                     this.colunas = result.data
+                    console.log(result)
                 } )
             },
             excluir(id){

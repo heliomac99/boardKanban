@@ -7,14 +7,14 @@
       </select>
     </div>
 
-    <button v-if="primeiraColuna" class="btn btn-secondary insere primaryColorBtn" @click="abrirModal(0, primeiraColuna)">Inserir Task <font-awesome-icon icon="fa-solid fa-plus"/></button>
+    <button v-if="primeiraColunaId" class="btn btn-secondary insere primaryColorBtn" @click="abrirModal(0, primeiraColunaId)">Inserir Task <font-awesome-icon icon="fa-solid fa-plus"/></button>
     
-    <div style="display:flex; justify-content:center" id="divBoard">
+    <div style="display:flex; justify-content:center; overflow-x: auto; padding:30px" id="divBoard">
 
       <div class="card colunm drop-zone" @drop="soltou(coluna.id)" @dragover.prevent="" v-for="coluna in colunas" :key="coluna.id">
         <div class="card-body board">
           <h5 class="card-title secondaryColor">{{coluna.nome}}</h5>  
-          <div class="card cardTask" v-for="card in coluna.cards" @dblclick="edit(card.id)" @contextmenu.prevent="abrirMenu($event, card)" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id, coluna.id)" >
+          <div class="card cardTask" v-for="card in coluna.cards" @dblclick="edit(card.id)" v-bind:style="style(coluna)" @contextmenu.prevent="abrirMenu($event, card)" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id, coluna.id)" >
             <div>
               <h5>{{card.titulo}}</h5>
               <h8 v-if="card.autorId > 0">{{"Autor: "  + card.nomeAutor}}</h8>
@@ -45,10 +45,15 @@ export default {
       boards:[],
       colunas: [],
       boardSelecionado:null,
-      primeiraColuna: null,
+      primeiraColunaId: null,
     }
   },
   methods:{ 
+    style(coluna){
+      return {
+        backgroundColor: coluna.cor
+      }
+    },
     abrirMenu(e, card){
       this.$refs.menu.abrir(card, e.clientX, e.clientY)
     },
@@ -66,18 +71,7 @@ export default {
     carregarColunas(){
       axios.post('http://localhost:8000/board/carregarBoard', { "boardId" : this.boardSelecionado }).then((result) => {
         this.colunas = result.data
-      })
-    },
-    carregarColunaAlteradas(colunaIdDest, colunaIdOrigem){
-      var indexDest = this.colunas.findIndex(x => x.id == colunaIdDest)
-      var indexOrigem = this.colunas.findIndex(x => x.id == colunaIdOrigem)
-
-      axios.post('http://localhost:8000/card/carregarPorColuna', { "colunaId" : colunaIdDest }).then( (result) => {
-            this.colunas[indexDest].cards = result.data
-      })
-
-      axios.post('http://localhost:8000/card/carregarPorColuna', { "colunaId" : colunaIdOrigem }).then( (result) => {
-            this.colunas[indexOrigem].cards = result.data
+        this.primeiraColunaId = this.colunas[0].id
       })
     },
     moveu(id, idColunaOrigem){
@@ -86,7 +80,7 @@ export default {
       this.idCardSelecionado = id
     },
     soltou(idColunaDestino){
-      axios.post("http://localhost:8000/moverCard", { "colunaId": idColunaDestino, id: this.idCardSelecionado}).then( () => { this.carregarColunaAlteradas(idColunaDestino, this.idColunaOrigem) })
+      axios.post("http://localhost:8000/moverCard", { "colunaId": idColunaDestino, id: this.idCardSelecionado}).then( () => { this.carregarColunas() })
     },
     edit(id){
       this.$refs.modal.abrir(id)
@@ -108,7 +102,7 @@ export default {
 }
 
 .cardTask{
-  background-color: #19381f;
+  background-color: black;
   color:white;
   min-height: 100px;
 }
@@ -117,6 +111,7 @@ export default {
   width: 30rem !important;
   min-height: 80vh !important;
   margin-right: 10px;
+  min-width:200px;
 }
 
 .colunmLast{

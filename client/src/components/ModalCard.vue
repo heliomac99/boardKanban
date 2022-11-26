@@ -70,7 +70,7 @@
           this.card.descricao = ""
       },
       salvar(card){
-        console.log(card)
+
         if(!this.edit){
           axios.post("http://localhost:8000/card/add", card).then(() => {
               this.fechar()

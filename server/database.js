@@ -37,6 +37,7 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
             nome text,
             ordem INTEGER NOT NULL,
             boardId INTEGER,
+            cor text,
             FOREIGN KEY (boardId) REFERENCES Board(id)
         )`);
     }
