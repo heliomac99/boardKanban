@@ -9,7 +9,7 @@
 
     <button v-if="primeiraColunaId" class="btn btn-secondary insere primaryColorBtn" @click="abrirModal(0, primeiraColunaId)">Inserir Task <font-awesome-icon icon="fa-solid fa-plus"/></button>
     
-    <div style="display:flex; justify-content:center; overflow-x: auto; padding:30px" id="divBoard">
+    <div id="divBoard">
 
       <div class="card colunm drop-zone" @drop="soltou(coluna.id)" @dragover.prevent="" v-for="coluna in colunas" :key="coluna.id">
         <div class="card-body board">
@@ -98,7 +98,10 @@ export default {
 <style>
 
 #divBoard{
-  padding: 10px;
+  display:flex;
+  max-width: 80vw;
+  height: fit-content;
+  overflow: auto;
 }
 
 .cardTask{
@@ -108,14 +111,14 @@ export default {
 }
 
 .colunm{
-  width: 30rem !important;
+  width: 20rem !important;
   min-height: 80vh !important;
   margin-right: 10px;
   min-width:200px;
 }
 
 .colunmLast{
-  width: 30rem !important;
+  width: 20rem !important;
   min-height: 80vh !important;
   margin-right: 0px !important;
 }

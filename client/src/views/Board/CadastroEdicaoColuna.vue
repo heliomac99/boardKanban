@@ -17,7 +17,7 @@
                         </div>
 
                         <div class="col-1" style="margin-left:20px;">
-                            <input v-model="coluna.cor" placeholder="Cor" type="color" class="form-control">
+                            <input v-model="coluna.cor" type="color" class="form-control inputColor">
                             <span name="cor" class="spanErro"></span>  
                         </div>
 
@@ -28,13 +28,14 @@
                     </div>
 
                     
-                    <div class="form-group col-10">
+                    <div class="col-12">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th scope="col" style="width:80px"></th>
-                                    <th scope="col">Nome</th>
-                                    <th scope="col" style="width:80px">Ordem</th>
+                                    <th scope="col" style="width:10%;"></th>
+                                    <th scope="col" style="width:70%;">Nome</th>
+                                    <th scope="col" style="width:10%;">Ordem</th>
+                                    <th scope="col" class="tdColor" style="width:10%;">Cor</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -46,8 +47,8 @@
                                     </td>
                                     <td>{{coluna.nome}}</td>
                                     <td>{{coluna.ordem}}</td>
-                                    <td style="width:70px">
-                                        <input placeholder="Cor" type="color" class="form-control" :value="coluna.cor" @change="alteraCor(coluna, $event.target.value)">
+                                    <td>
+                                        <input class="form-control inputColor" type="color" :value="coluna.cor" @change="alteraCor(coluna, $event.target.value)">
                                     </td>
                                 </tr>
                                 
@@ -113,6 +114,16 @@
 
 .cardColuna{
     padding: 0
+}
+
+table {
+    width: 80% !important;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.inputColor{
+    min-width: 40px;
 }
 
 </style>
