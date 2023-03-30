@@ -13,6 +13,7 @@ import router from './router'
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import VueClickAway from "vue3-click-away";
+import emailjs from 'emailjs-com';
 
 /* add icons to the library */
 library.add(faPlus)
@@ -22,6 +23,7 @@ library.add(faTrash)
 
 createApp(App)
 .component('font-awesome-icon', FontAwesomeIcon)
+.use(emailjs)
 .use(VueClickAway)
 .use(VueSweetalert2)
 .use(VueAxios, axios)

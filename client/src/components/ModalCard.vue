@@ -47,6 +47,7 @@
   import axios from "axios";
   import ValidationForm from './ValidationForm.vue'
   import ModalPergunta from '../components/ModalPergunta.vue'
+  import emailjs from '@emailjs/browser';
   
   export default {
     name: 'ModalCard',
@@ -69,8 +70,26 @@
           this.card.titulo= ""
           this.card.descricao = ""
       },
+      enviarEmail(card){
+        var autor = this.autores.filter( function (el) {
+          return el.id == card.autorId
+        })[0]
+        if(autor != null){
+          try{
+            emailjs.send("service_7twc9ul","template_317p5b5",{
+                        to_name: autor.nome,
+                        message: card.titulo,
+                        send_to: autor.email,
+                        link: window.location.pathname
+                    }, "NakJZ8PgA-LMP8Imr") 
+                }
+          catch(erro){
+              console.log(erro)
+          } 
+        }
+      },
       salvar(card){
-
+        this.enviarEmail(card)
         if(!this.edit){
           axios.post("http://localhost:8000/card/add", card).then(() => {
               this.fechar()

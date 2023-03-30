@@ -37,6 +37,8 @@
   import ModalPergunta from '../../components/ModalPergunta.vue'
   import ValidationForm from '../../components/ValidationForm.vue'
   import axios from 'axios'
+  import emailjs from '@emailjs/browser';
+
   export default {
         name: 'CadastroEdicaoParticipanteView',
         components: { ModalPergunta, ValidationForm },
@@ -67,7 +69,18 @@
                             }
                         }
                     )
-                }      
+                } 
+                try{
+                    emailjs.send("service_7twc9ul","template_ny5eji9",{
+                        from_name: "Serviço de E-mail Board APP",
+                        to_name: participante.nome,
+                        message: "Sua conta foi criada/alterada com sucesso!",
+                        reply_to: participante.email,
+                    }, "NakJZ8PgA-LMP8Imr") 
+                }
+                catch(erro){
+                    console.log(erro)
+                }    
             },           
             async excluir(participante) { 
                 const ok = await this.$refs.modalPergunta.show({

@@ -15,9 +15,10 @@
         <div class="card-body board">
           <h5 class="card-title secondaryColor">{{coluna.nome}}</h5>  
           <div class="card cardTask" v-for="card in coluna.cards" @dblclick="edit(card.id)" v-bind:style="style(coluna)" @contextmenu.prevent="abrirMenu($event, card)" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id, coluna.id)" >
-            <div>
-              <h5>{{card.titulo}}</h5>
-              <h8 v-if="card.autorId > 0">{{"Autor: "  + card.nomeAutor}}</h8>
+            <div id="teste">
+              <h8>{{card.titulo}}</h8>
+              <br>
+              <h9 v-if="card.autorId > 0">{{"Autor: "  + card.nomeAutor}}</h9>
             </div>    
           </div>
         </div>
@@ -97,6 +98,13 @@ export default {
 
 <style>
 
+#teste {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 #divBoard{
   display:flex;
   max-width: 80vw;
@@ -107,11 +115,11 @@ export default {
 .cardTask{
   background-color: black;
   color:white;
-  min-height: 100px;
+  height: 100px;
 }
 
 .colunm{
-  width: 20rem !important;
+  width: 200px !important;
   min-height: 80vh !important;
   margin-right: 10px;
   min-width:200px;
