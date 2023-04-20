@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { faPen } from '@fortawesome/free-solid-svg-icons'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import router from './router'
@@ -19,6 +20,8 @@ import store from './vuex'
 library.add(faPlus)
 library.add(faPen)
 library.add(faTrash)
+library.add(faArrowLeft)
+
 
 
 createApp(App)

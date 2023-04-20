@@ -29,7 +29,7 @@ export default {
   name: 'App',
   computed: {
     eLogin() {
-      return this.$route.path ==  '/' ? true : false 
+      return this.$route.path ==  '/' ||  this.$route.path ==  '/cadastrousuario' ? true : false 
     },
     getNomeUsuarioLogado () {
       return this.$store.state.usuario.nome

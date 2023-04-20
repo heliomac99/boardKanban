@@ -6,6 +6,7 @@ import CadastroEdicaoParticipanteView from './views/Participante/CadastroEdicaoP
 import CadastroEdicaoBoardView from './views/Board/CadastroEdicaoBoard.vue'
 import ListaBoardView from './views/Board/ListaBoard.vue'
 import LoginView from './views/Login/Login.vue'
+import CadastroUsuarioView from './views/Login/CadastroUsuario.vue'
 
 
 import CadastroEdicaoColunaView from './views/Board/CadastroEdicaoColuna.vue'
@@ -14,6 +15,11 @@ const routes = [
         path: '/',
         name: 'Login',
         component: LoginView,
+    },
+    {
+        path: '/CadastroUsuario',
+        name: 'CadastroUsuario',
+        component: CadastroUsuarioView,
     },
     {
         path: '/Home',

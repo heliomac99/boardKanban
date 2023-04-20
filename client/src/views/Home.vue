@@ -10,7 +10,6 @@
     <button v-if="idPrimeiraColuna" class="btn btn-secondary insere primaryColorBtn" @click="abrirModal(0, idPrimeiraColuna)">Inserir Task <font-awesome-icon icon="fa-solid fa-plus"/></button>
     
     <div id="divBoard">
-
       <div class="card colunm drop-zone" @drop="soltou(coluna.id)" @dragover.prevent="" v-for="coluna in colunas" :key="coluna.id">
         <div class="card-body board">
           <h5 class="card-title secondaryColor">{{coluna.nome}}</h5>  
@@ -120,7 +119,7 @@ export default {
 
 #divBoard{
   display:flex;
-  max-width: 80vw;
+  max-width: 85vw;
   height: fit-content;
   overflow: auto;
 }

@@ -433,18 +433,30 @@ app.post("/board/carregarBoard", (req, res) => {
 })
 
 app.post('/usuario/add', (req, res) => {
+    let validacao = `SELECT * FROM usuario where login = ?`
     let sql = `INSERT INTO usuario (login, nome, senha) VALUES (?,?,?)`
     let nome = req.body.nome
     let login = req.body.login
     let senha = req.body.senha
 
-    db.run(sql, [login, nome, senha], function (err, result){
+
+    db.all(validacao, [login], function (err, result){
         if(err)
             throw err
         else{
-            res.json("")
+            if(result.length > 0)
+                res.json({valido: false})
+            else{
+                db.run(sql, [login, nome, senha], function (err, result){
+                    if(err)
+                        throw err
+                    else{
+                        res.json({valido: true})
+                    }
+                })
+            }
         }
-    })
+    }) 
 });
 
 app.post('/usuario/validar', (req, res) => {

@@ -4,24 +4,23 @@
             <ValidationForm id="loginForm" :model="usuario" ref="validation" @save="salvar(usuario)">
                 <div class="container" id="loginContainer">
 
-                    <div>
-                        <div>
-                            <label class="loginLabel">Login</label>
-                            <input type="text" class="form-control loginInput" v-model="usuario.login" placeholder="Insira seu login">
-                        </div>
+                    <div class="divInput">
+                        <label class="loginLabel">Login</label>
+                        <input type="text" class="form-control loginInput" v-model="usuario.login" placeholder="Insira seu login">
                         <span name="login" class="spanErro"></span>  
                     </div>
-                    <div>
+
+                    <div class="divInput">
                         <label class="loginLabel">Senha</label>
                         <input type="password" class="form-control loginInput" v-model="usuario.senha"  placeholder="Insira sua senha">
                         <span name="senha" class="spanErro"></span>
                     </div>
 
-                    <label class="loginLabel" style="margin-top:15px">
-                        <input type="checkbox" checked="checked" name="remember"> Remember me
-                    </label>
-
-                    <button type="submit" id="loginButton" class="btn btn-secondary insere primaryColorBtn" >Login</button>
+                    <div>
+                        <a @click="irParaCadastroUsuario()" style="font-size: small; float:right; color:#0d6efd; text-decoration: underline; cursor: pointer;">Criar Conta</a>
+                    </div>
+                                         
+                    <button type="submit" id="loginButton" class="btn btn-secondary insere primaryColorBtn" >Login</button>                  
 
                 </div>
             </ValidationForm>
@@ -55,6 +54,9 @@ import axios from 'axios';
                     else
                         this.$refs.validation.insereErrorMessage('senha', 'Usuário ou senha inválidos')
                 } )
+            },
+            irParaCadastroUsuario(){
+                this.$router.push('/cadastrousuario')
             }
         },
         mounted(){
@@ -67,6 +69,9 @@ import axios from 'axios';
 </script>
 
 <style>
+.divInput{
+    margin-bottom:10px;
+}
 .loginLabel{
     position: absolute;
 }
@@ -91,7 +96,7 @@ import axios from 'axios';
 input[type=text], input[type=password] {
   width: 100%;
   padding: 12px 20px;
-  margin: 8px 0;
+
   display: inline-block;
   border: 1px solid #ccc;
   box-sizing: border-box;
@@ -99,7 +104,7 @@ input[type=text], input[type=password] {
 
 #loginButton {
     
-  margin-top:40px !important;
+  margin-top:50px !important;
   margin-bottom:30px !important;
   color: white;
   padding: 14px 20px;
@@ -115,11 +120,12 @@ button:hover {
 
 #loginForm{
     width: 700px;
-    height: 350px;
+    height: fit-content;
     border: 3px solid #f1f1f1;
     background-color: white;
-    border-radius: 30px;
-    padding: 10px;
+    border-radius: 25px;
+    padding: 30px;
+    padding-bottom: 10px !important;
 }
 
 #loginContainer {
