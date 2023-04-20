@@ -18,13 +18,12 @@ export default {
     components: { PopupModal },
 
     data: () => ({
-        // Parameters that change depending on the type of dialogue
-        title: undefined,
-        message: undefined, // Main text content
-        okButton: undefined, // Text for confirm button; leave it empty because we don't know what we're using it for
-        cancelButton: 'Cancelar', // text for cancel button
 
-        // Private variables
+        title: undefined,
+        message: undefined, 
+        okButton: undefined, 
+        cancelButton: 'Cancelar', 
+
         resolvePromise: undefined,
         rejectPromise: undefined,
     }),
@@ -37,9 +36,8 @@ export default {
             if (opts.cancelButton) {
                 this.cancelButton = opts.cancelButton
             }
-            // Once we set our config, we tell the popup modal to open
+
             this.$refs.popup.open()
-            // Return promise so the caller can get results
             return new Promise((resolve, reject) => {
                 this.resolvePromise = resolve
                 this.rejectPromise = reject
@@ -54,8 +52,6 @@ export default {
         _cancel() {
             this.$refs.popup.close()
             this.resolvePromise(false)
-            // Or you can throw an error
-            // this.rejectPromise(new Error('User cancelled the dialogue'))
         },
     },
 }

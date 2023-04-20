@@ -14,8 +14,8 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import VueClickAway from "vue3-click-away";
 import emailjs from 'emailjs-com';
+import store from './vuex'
 
-/* add icons to the library */
 library.add(faPlus)
 library.add(faPen)
 library.add(faTrash)
@@ -23,6 +23,7 @@ library.add(faTrash)
 
 createApp(App)
 .component('font-awesome-icon', FontAwesomeIcon)
+.use(store)
 .use(emailjs)
 .use(VueClickAway)
 .use(VueSweetalert2)

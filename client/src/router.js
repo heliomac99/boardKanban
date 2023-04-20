@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import BoardView from './views/Board.vue'
+import HomeView from './views/Home.vue'
 import ListaParticipanteView from './views/Participante/ListaParticipante.vue'
 import CadastroEdicaoParticipanteView from './views/Participante/CadastroEdicaoParticipante.vue'
 
@@ -16,9 +16,9 @@ const routes = [
         component: LoginView,
     },
     {
-        path: '/Board',
-        name: 'Board',
-        component: BoardView,
+        path: '/Home',
+        name: 'Home',
+        component: HomeView,
     },
     {
         path: '/ListaParticipante',

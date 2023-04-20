@@ -1,12 +1,26 @@
 <template>
-  <div>
-    <nav v-if="!eLogin" class="navbar navbar-light bg-light">
-      <router-link to="/Board" class="nav-link">Home</router-link>
-      <router-link to="/ListaParticipante" class="nav-link">Participantes</router-link>
-      <router-link to="/ListaBoard" class="nav-link">Boards</router-link>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" v-if="!eLogin">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                  <router-link to="/Home" class="nav-link">Home</router-link>
+                </li>
+                <li class="nav-item">
+                  <router-link to="/ListaParticipante" class="nav-link">Participantes</router-link>
+                </li>
+                <li class="nav-item">
+                  <router-link to="/ListaBoard" class="nav-link">Boards</router-link>
+                </li>
+            </ul>
+        </div>
+        <a style="color:gray; margin-right: 5px;">Bem vindo</a>
+        <a style="color:gray; margin-right: 5px; font-weight: 600;">{{getNomeUsuarioLogado}}</a>
+        <a style="color:#628E90; margin-right: 30px; cursor: pointer;" @click="logout()">(Sair)</a>
     </nav>
     <router-view></router-view>
-  </div>
 </template>
 
 <script>
@@ -16,6 +30,15 @@ export default {
   computed: {
     eLogin() {
       return this.$route.path ==  '/' ? true : false 
+    },
+    getNomeUsuarioLogado () {
+      return this.$store.state.usuario.nome
+    }
+  },
+  methods: {
+    logout(){
+      this.$store.commit('logout')
+      this.$router.push({ name: 'Login' })
     }
   }
 

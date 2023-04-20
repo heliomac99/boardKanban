@@ -3,16 +3,18 @@
         <div id="loginDiv">
             <ValidationForm id="loginForm" :model="usuario" ref="validation" @save="salvar(usuario)">
                 <div class="container" id="loginContainer">
-                    <label><b>Login</b></label>
-                    <input type="text" class="form-control" v-model="usuario.login" placeholder="Insira seu login">
 
-                    <label><b>Senha</b></label>
-                    <input type="password" class="form-control" v-model="usuario.senha"  placeholder="Insira sua senha">
-
+                    <div>
+                        <input type="text" class="form-control" v-model="usuario.login" placeholder="Insira seu login">
+                        <span name="login" class="spanErro"></span>  
+                    </div>
+                    <div>
+                        <input type="password" class="form-control" v-model="usuario.senha"  placeholder="Insira sua senha">
+                        <span name="senha" class="spanErro"></span> 
+                    </div>
+                
                     <button type="submit" id="loginButton" class="btn btn-secondary insere primaryColorBtn" >Login</button>
-                    <label>
-                    <input type="checkbox" checked="checked"> Lembrar de mim
-                    </label>
+
                 </div>
             </ValidationForm>
         </div>
@@ -22,6 +24,7 @@
 
 <script>
 import ValidationForm from '@/components/ValidationForm.vue';
+import axios from 'axios';
 
   export default {
         name: 'LoginView',
@@ -36,15 +39,27 @@ import ValidationForm from '@/components/ValidationForm.vue';
         },
         methods: {
             salvar(usuario){
-                
+                axios.post('http://localhost:8000/usuario/validar', { "login" : usuario.login, "senha": usuario.senha}).then( (res) =>{ 
+                    if(res.data.valido){
+                        this.$store.commit('login', res.data.usuario)
+                        this.$router.push('/home')
+                    }                    
+                    else
+                        this.$refs.validation.insereErrorMessage('senha', 'Usuário ou senha inválidos')
+                } )
             }
         },
+        mounted(){
+            this.$refs.validation.required('login',"Login")
+            this.$refs.validation.required('senha',"Senha")
+        }
 
         
     }
 </script>
 
 <style>
+
 #wallpaper{
     width: 100vw !important;
     height: 100vh !important;
@@ -64,7 +79,6 @@ import ValidationForm from '@/components/ValidationForm.vue';
 
 }
 
-/* Full-width inputs */
 input[type=text], input[type=password] {
   width: 100%;
   padding: 12px 20px;
@@ -74,9 +88,9 @@ input[type=text], input[type=password] {
   box-sizing: border-box;
 }
 
-/* Set a style for all buttons */
 #loginButton {
-  background-color: #04AA6D;
+    
+  margin-top:30px !important;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -85,31 +99,24 @@ input[type=text], input[type=password] {
   width: 100%;
 }
 
-/* Add a hover effect for buttons */
 button:hover {
   opacity: 0.8;
 }
 
 #loginForm{
     width: 700px;
-    height: 350px;
+    height: 320px;
     border: 3px solid #f1f1f1;
     background-color: white;
     border-radius: 30px;
     padding: 10px;
 }
 
-/* Add padding to containers */
 #loginContainer {
   padding: 20px;
-  width:600px;
+  width:500px;
 }
 
-/* The "Forgot password" text */
-span.psw {
-  float: right;
-  padding-top: 16px;
-}
 
 
 

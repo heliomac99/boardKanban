@@ -94,7 +94,7 @@ export default {
     excluir(id){
       axios.post("http://localhost:8000/card/delete", {id: id}).then( () => { this.carregarColunas() })
     },
-    onScreenResize() {
+    emMudancaDeTamanhoDaTela() {
       window.addEventListener("resize", () => {
         this.fecharMenu();
       });
@@ -102,7 +102,7 @@ export default {
   },
   mounted(){
     this.carregarBoards()
-    this.onScreenResize()
+    this.emMudancaDeTamanhoDaTela()
   }
 }
 </script>
@@ -163,27 +163,4 @@ export default {
   padding: 10px !important;
 }
 
-::-webkit-scrollbar {
-    width: 12px;
-}
-
-/* Track */
-::-webkit-scrollbar {
-width: 20px;
-height: 5px;
-}
-
-::-webkit-scrollbar-track {
-box-shadow: inset 0 0 5px grey; 
-border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-background:rgba(77, 67, 67, 0.096); 
-border-radius: 0px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-background:rgb(54, 56, 58); 
-}
 </style>

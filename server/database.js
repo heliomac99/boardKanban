@@ -27,6 +27,13 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
             email text UNIQUE
         )`); 
 
+        db.run(`CREATE TABLE IF NOT EXISTS Usuario (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            login text,
+            senha text,
+            nome text
+        )`); 
+
         db.run(`CREATE TABLE IF NOT EXISTS Board (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome text

@@ -48,9 +48,10 @@ app.post("/autor", (req, res, next) => {
       });
 });
 
-app.post("/listarBackLog", (req, res) => {
-    var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor, C.autorId as autorId from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 1 "
-    db.all(sql, [], (err, rows) => {
+app.get("/usuario", (req, res, next) => {
+    var sql = "select * from usuario"
+    var params = []
+    db.all(sql, params, (err, rows) => {
         if (err) {
           res.status(400).json({"error":err.message});
           return;
@@ -61,31 +62,44 @@ app.post("/listarBackLog", (req, res) => {
       });
 });
 
-app.post("/listarDesenvolvimento", (req, res) => {
-    var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor, C.autorId as autorId from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 2"
-    db.all(sql, [], (err, rows) => {
-        if (err) {
-          res.status(400).json({"error":err.message});
-          return;
-        }
-        res.json({
-            "data":rows
-        })
-      });
-});
+// app.post("/listarBackLog", (req, res) => {
+//     var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor, C.autorId as autorId from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 1 "
+//     db.all(sql, [], (err, rows) => {
+//         if (err) {
+//           res.status(400).json({"error":err.message});
+//           return;
+//         }
+//         res.json({
+//             "data":rows
+//         })
+//       });
+// });
 
-app.post("/listarFinalizado", (req, res) => {
-    var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor, C.autorId as autorId from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 3"
-    db.all(sql, [], (err, rows) => {
-        if (err) {
-          res.status(400).json({"error":err.message});
-          return;
-        }
-        res.json({
-            "data":rows
-        })
-      });
-});
+// app.post("/listarDesenvolvimento", (req, res) => {
+//     var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor, C.autorId as autorId from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 2"
+//     db.all(sql, [], (err, rows) => {
+//         if (err) {
+//           res.status(400).json({"error":err.message});
+//           return;
+//         }
+//         res.json({
+//             "data":rows
+//         })
+//       });
+// });
+
+// app.post("/listarFinalizado", (req, res) => {
+//     var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor, C.autorId as autorId from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 3"
+//     db.all(sql, [], (err, rows) => {
+//         if (err) {
+//           res.status(400).json({"error":err.message});
+//           return;
+//         }
+//         res.json({
+//             "data":rows
+//         })
+//       });
+// });
 
 app.post("/moverCard", (req, res) => {
     let sql = "update card set colunaId = ? where id = ?"
@@ -412,6 +426,38 @@ app.post("/board/carregarBoard", (req, res) => {
         
     })
 })
+
+app.post('/usuario/add', (req, res) => {
+    let sql = `INSERT INTO usuario (login, nome, senha) VALUES (?,?,?)`
+    let nome = req.body.nome
+    let login = req.body.login
+    let senha = req.body.senha
+
+    db.run(sql, [login, nome, senha], function (err, result){
+        if(err)
+            throw err
+        else{
+            res.json("")
+        }
+    })
+});
+
+app.post('/usuario/validar', (req, res) => {
+    let sql = `SELECT * from usuario where login = ? and senha = ?`
+    let login = req.body.login
+    let senha = req.body.senha
+
+    db.all(sql, [login, senha], function (err, rows){
+        if(err)
+            throw err
+        else{
+            if(rows.length > 0)
+                res.json({valido: true, usuario: rows[0]})
+            else
+                res.json({valido: false, usuario: null})
+        }
+    })
+});
 
 app.use(function(req, res){
     res.status(404);
