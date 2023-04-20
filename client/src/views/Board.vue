@@ -7,7 +7,7 @@
       </select>
     </div>
 
-    <button v-if="primeiraColunaId" class="btn btn-secondary insere primaryColorBtn" @click="abrirModal(0, primeiraColunaId)">Inserir Task <font-awesome-icon icon="fa-solid fa-plus"/></button>
+    <button v-if="idPrimeiraColuna" class="btn btn-secondary insere primaryColorBtn" @click="abrirModal(0, idPrimeiraColuna)">Inserir Task <font-awesome-icon icon="fa-solid fa-plus"/></button>
     
     <div id="divBoard">
 
@@ -15,15 +15,16 @@
         <div class="card-body board">
           <h5 class="card-title secondaryColor">{{coluna.nome}}</h5>  
           <div class="card cardTask" v-for="card in coluna.cards" @dblclick="edit(card.id)" v-bind:style="style(coluna)" @contextmenu.prevent="abrirMenu($event, card)" :key="card.id" style="margin-bottom: 20px;" draggable="true" @dragstart="moveu(card.id, coluna.id)" >
-            <div id="teste">
-              <h8>{{card.titulo}}</h8>
+            <div id="divCard">
+              <h8 class="textoCard" >{{card.titulo}}</h8>
               <br>
-              <h9 v-if="card.autorId > 0">{{"Autor: "  + card.nomeAutor}}</h9>
+              <h8 class="textoCard" v-if="card.autorId > 0">{{"Autor: "  + card.nomeAutor}}</h8>
             </div>    
           </div>
         </div>
       </div>
     </div>
+
 
     <MenuCard ref="menu"></MenuCard>
     <ModalCard ref="modal" @refresh="carregarColunas"></ModalCard>
@@ -46,7 +47,7 @@ export default {
       boards:[],
       colunas: [],
       boardSelecionado:null,
-      primeiraColunaId: null,
+      idPrimeiraColuna: null,
     }
   },
   methods:{ 
@@ -72,7 +73,7 @@ export default {
     carregarColunas(){
       axios.post('http://localhost:8000/board/carregarBoard', { "boardId" : this.boardSelecionado }).then((result) => {
         this.colunas = result.data
-        this.primeiraColunaId = this.colunas[0].id
+        this.idPrimeiraColuna = this.colunas[0].id
       })
     },
     moveu(id, idColunaOrigem){
@@ -81,24 +82,36 @@ export default {
       this.idCardSelecionado = id
     },
     soltou(idColunaDestino){
-      axios.post("http://localhost:8000/moverCard", { "colunaId": idColunaDestino, id: this.idCardSelecionado}).then( () => { this.carregarColunas() })
+      var colunaDestino = this.colunas.filter(x => {
+        return x.id == idColunaDestino
+      })[0]
+      var qntCardsColunaDestino = colunaDestino.cards.length
+      axios.post("http://localhost:8000/moverCard", { "colunaId": idColunaDestino, "id": this.idCardSelecionado, "ordem": qntCardsColunaDestino + 1}).then( () => { this.carregarColunas() })
     },
     edit(id){
       this.$refs.modal.abrir(id)
     },
     excluir(id){
       axios.post("http://localhost:8000/card/delete", {id: id}).then( () => { this.carregarColunas() })
-    }
+    },
+    onScreenResize() {
+      window.addEventListener("resize", () => {
+        this.fecharMenu();
+      });
+    },
   },
   mounted(){
     this.carregarBoards()
+    this.onScreenResize()
   }
 }
 </script>
 
 <style>
-
-#teste {
+.textoCard{
+  font-size: small;
+}
+#divCard {
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
@@ -150,4 +163,27 @@ export default {
   padding: 10px !important;
 }
 
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar {
+width: 20px;
+height: 5px;
+}
+
+::-webkit-scrollbar-track {
+box-shadow: inset 0 0 5px grey; 
+border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+background:rgba(77, 67, 67, 0.096); 
+border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+background:rgb(54, 56, 58); 
+}
 </style>

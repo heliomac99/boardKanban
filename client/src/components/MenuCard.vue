@@ -37,14 +37,18 @@ export default {
 
 <style>
     #menu{
-        width: 200px;
-        height:300px;
+        width: 150px;
+        height: 250px;
         visibility: hidden;
         position:absolute;
     }
 
     .menuItem:hover{
         background-color:darkgray ;
+    }
+
+    .menuItem{
+        font-size: small;
     }
    
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav class="navbar navbar-light bg-light">
+    <nav v-if="!eLogin" class="navbar navbar-light bg-light">
       <router-link to="/Board" class="nav-link">Home</router-link>
       <router-link to="/ListaParticipante" class="nav-link">Participantes</router-link>
       <router-link to="/ListaBoard" class="nav-link">Boards</router-link>
@@ -10,8 +10,15 @@
 </template>
 
 <script>
+
 export default {
   name: 'App',
+  computed: {
+    eLogin() {
+      return this.$route.path ==  '/' ? true : false 
+    }
+  }
+
 
 }
 </script>
@@ -48,5 +55,9 @@ a{
 
 body{
   font-family: 'Roboto Mono', monospace !important;
+}
+
+.nav-link:hover{
+  color:#bc6c25 !important;
 }
 </style>

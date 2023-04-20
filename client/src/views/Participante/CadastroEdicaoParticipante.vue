@@ -55,7 +55,7 @@
             salvar(participante) { 
                 if(participante.id > 0){
                     axios.post('http://localhost:8000/autor/update', participante).then(
-                        this.$swal("Sucesso", "Paciente registrado com sucesso!", "success"),
+                        this.$swal("Sucesso", "Paciente editado com sucesso!", "success"),
                         this.$router.back()
                     )
                 }
