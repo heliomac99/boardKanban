@@ -39,6 +39,7 @@
                 board: {
                     id: this.$route.params.codigoBoard,
                     nome: null,
+                    usuarioId: this.$store.state.usuario.id,
                     colunas: []
                 },
                 coluna:{

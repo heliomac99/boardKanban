@@ -48,6 +48,19 @@ app.post("/autor", (req, res, next) => {
       });
 });
 
+app.post("/autorPorUsuario", (req, res, next) => {
+    var sql = "select * from autor where usuarioId = ?"
+    var usuarioId = req.body.usuarioId
+
+    db.all(sql, [usuarioId], (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.send(rows)
+      });
+});
+
 app.get("/usuario", (req, res, next) => {
     var sql = "select * from usuario"
     var params = []
@@ -61,45 +74,6 @@ app.get("/usuario", (req, res, next) => {
         })
       });
 });
-
-// app.post("/listarBackLog", (req, res) => {
-//     var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor, C.autorId as autorId from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 1 "
-//     db.all(sql, [], (err, rows) => {
-//         if (err) {
-//           res.status(400).json({"error":err.message});
-//           return;
-//         }
-//         res.json({
-//             "data":rows
-//         })
-//       });
-// });
-
-// app.post("/listarDesenvolvimento", (req, res) => {
-//     var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor, C.autorId as autorId from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 2"
-//     db.all(sql, [], (err, rows) => {
-//         if (err) {
-//           res.status(400).json({"error":err.message});
-//           return;
-//         }
-//         res.json({
-//             "data":rows
-//         })
-//       });
-// });
-
-// app.post("/listarFinalizado", (req, res) => {
-//     var sql = "SELECT C.id as id, C.titulo as titulo, C.descricao as descricao, A.nome as nomeAutor, C.autorId as autorId from card C LEFT JOIN autor A on C.autorId = A.id where estagio = 3"
-//     db.all(sql, [], (err, rows) => {
-//         if (err) {
-//           res.status(400).json({"error":err.message});
-//           return;
-//         }
-//         res.json({
-//             "data":rows
-//         })
-//       });
-// });
 
 app.post("/moverCard", (req, res) => {
     let sql = "update card set colunaId = ? where id = ?"
@@ -174,20 +148,21 @@ app.post('/card/carregarRegistro', (req, res) => {
 });
 
 app.post('/autor/add', (req, res) => {
-    let sqlEmail = `SELECT * FROM autor Where email = ?`
-    let sqlUpdate = `INSERT INTO autor (nome, email) VALUES (?,?)`
+    let sqlEmail = `SELECT * FROM autor Where email = ? and usuarioId = ?`
+    let sqlAdd = `INSERT INTO autor (nome, email, usuarioId) VALUES (?,?,?)`
     let nome = req.body.nome
     let email = req.body.email
-
-    db.all(sqlEmail, [email], (err, rows) => {
+    let usuarioId = req.body.usuarioId
+    
+    db.all(sqlEmail, [email, usuarioId], (err, rows) => {
         if(err)
-            throw err
+            throw err    
         else{
             if(rows.length > 0){
                 res.send({emailValido: false})
                 return;
             }
-            db.run(sqlUpdate, [nome, email], (err) => {
+            db.run(sqlAdd, [nome, email, usuarioId], (err) => {
                 if (err) {
                     res.status(500).send({ message: err.message });
                 } else {
@@ -200,15 +175,30 @@ app.post('/autor/add', (req, res) => {
 });
 
 app.post('/autor/update', (req, res) => {
-    let sql = `UPDATE autor SET nome = ?, email = ? WHERE id = ?`
+
+    let sqlEmail = `SELECT * FROM autor Where email = ? and usuarioId = ? and id != ?`
+    let sql = `UPDATE autor SET nome = ?, email = ?, usuarioId = ? WHERE id = ?`
     let id = req.body.id
     let nome = req.body.nome
     let email = req.body.email
-    db.run(sql, [nome, email, id], function (err, result){
+    let usuarioId = req.body.usuarioId
+
+    db.all(sqlEmail, [email, usuarioId, id], (err, rows) => {
         if(err)
             throw err
         else{
-            res.json("")
+            if(rows.length > 0){
+                res.send({emailValido: false})
+                return;
+            }
+            db.run(sql, [nome, email, usuarioId, id], function (err, result){
+                if(err)
+                    throw err
+                else{
+                    res.json("")
+                }
+            })
+            
         }
     })
 });
@@ -262,11 +252,25 @@ app.post("/board", (req, res, next) => {
       });
 });
 
-app.post('/board/add', (req, res) => {
-    let sql = `INSERT INTO board (nome) VALUES (?)`
-    let nome = req.body.nome
+app.post("/boardPorUsuario", (req, res, next) => {
+    var sql = "select * from board where usuarioId = ?"
+    var usuarioId = req.body.usuarioId
+    
+    db.all(sql, [usuarioId], (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.send(rows)
+      });
+});
 
-    db.run(sql, [nome], function (err, result){
+app.post('/board/add', (req, res) => {
+    let sql = `INSERT INTO board (nome, usuarioId) VALUES (?,?)`
+    let nome = req.body.nome
+    let usuarioId = req.body.usuarioId
+
+    db.run(sql, [nome, usuarioId], function (err, result){
         if(err)
             throw err
         else{
@@ -276,10 +280,11 @@ app.post('/board/add', (req, res) => {
 });
 
 app.post('/board/update', (req, res) => {
-    let sql = `UPDATE board SET nome = ? WHERE id = ?`
+    let sql = `UPDATE board SET nome = ?, usuarioId = ? WHERE id = ?`
     let id = req.body.id
+    let usuarioId = req.body.usuarioId
     let nome = req.body.nome
-    db.run(sql, [nome, id], function (err, result){
+    db.run(sql, [nome, usuarioId, id], function (err, result){
         if(err)
             throw err
         else{

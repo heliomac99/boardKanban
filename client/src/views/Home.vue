@@ -66,7 +66,7 @@ export default {
       this.$refs.modal.abrir(id, colunaId)
     },
     carregarBoards(){
-      axios.post("http://localhost:8000/board").then((res) => {
+      axios.post("http://localhost:8000/boardPorUsuario", { "usuarioId": this.$store.state.usuario.id } ).then((res) => {
             this.boards = res.data
       })
     },

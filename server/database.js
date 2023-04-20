@@ -24,19 +24,23 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         db.run(`CREATE TABLE IF NOT EXISTS Autor (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome text,
-            email text UNIQUE
+            email text,
+            usuarioId INTEGER,
+            FOREIGN KEY (usuarioId) REFERENCES Usuario(id)
         )`); 
 
         db.run(`CREATE TABLE IF NOT EXISTS Usuario (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            login text,
+            login text UNIQUE,
             senha text,
             nome text
         )`); 
 
         db.run(`CREATE TABLE IF NOT EXISTS Board (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome text
+            nome text,
+            usuarioId INTEGER,
+            FOREIGN KEY (usuarioId) REFERENCES Usuario(id)
         )`); 
 
         db.run(`CREATE TABLE IF NOT EXISTS Coluna (

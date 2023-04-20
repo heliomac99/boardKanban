@@ -16,8 +16,8 @@
                 </li>
             </ul>
         </div>
-        <a style="color:gray; margin-right: 5px;">Bem vindo</a>
-        <a style="color:gray; margin-right: 5px; font-weight: 600;">{{getNomeUsuarioLogado}}</a>
+        <a style="color:gray;">Bem vindo</a>
+        <a style="color:gray; font-weight: 600;">{{getNomeUsuarioLogado}}</a>
         <a style="color:#628E90; margin-right: 30px; cursor: pointer;" @click="logout()">(Sair)</a>
     </nav>
     <router-view></router-view>
@@ -47,6 +47,9 @@ export default {
 </script>
 
 <style>
+.spanErro{
+  color: red !important;
+}
 .navbar{
   display:flex !important;
   justify-content: flex-start !important;

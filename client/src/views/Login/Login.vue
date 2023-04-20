@@ -5,14 +5,22 @@
                 <div class="container" id="loginContainer">
 
                     <div>
-                        <input type="text" class="form-control" v-model="usuario.login" placeholder="Insira seu login">
+                        <div>
+                            <label class="loginLabel">Login</label>
+                            <input type="text" class="form-control loginInput" v-model="usuario.login" placeholder="Insira seu login">
+                        </div>
                         <span name="login" class="spanErro"></span>  
                     </div>
                     <div>
-                        <input type="password" class="form-control" v-model="usuario.senha"  placeholder="Insira sua senha">
-                        <span name="senha" class="spanErro"></span> 
+                        <label class="loginLabel">Senha</label>
+                        <input type="password" class="form-control loginInput" v-model="usuario.senha"  placeholder="Insira sua senha">
+                        <span name="senha" class="spanErro"></span>
                     </div>
-                
+
+                    <label class="loginLabel" style="margin-top:15px">
+                        <input type="checkbox" checked="checked" name="remember"> Remember me
+                    </label>
+
                     <button type="submit" id="loginButton" class="btn btn-secondary insere primaryColorBtn" >Login</button>
 
                 </div>
@@ -59,7 +67,9 @@ import axios from 'axios';
 </script>
 
 <style>
-
+.loginLabel{
+    position: absolute;
+}
 #wallpaper{
     width: 100vw !important;
     height: 100vh !important;
@@ -69,14 +79,13 @@ import axios from 'axios';
 #loginDiv{
     display:flex;
     justify-content: center;
-  position: absolute;
-  width: 300px;
-  height: 200px;
-  z-index: 15;
-  top: 30%;
-  left: 50%;
-  margin: -100px 0 0 -150px;
-
+    position: absolute;
+    width: 300px;
+    height: 200px;
+    z-index: 15;
+    top: 30%;
+    left: 50%;
+    margin: -100px 0 0 -150px;
 }
 
 input[type=text], input[type=password] {
@@ -90,7 +99,8 @@ input[type=text], input[type=password] {
 
 #loginButton {
     
-  margin-top:30px !important;
+  margin-top:40px !important;
+  margin-bottom:30px !important;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -105,7 +115,7 @@ button:hover {
 
 #loginForm{
     width: 700px;
-    height: 320px;
+    height: 350px;
     border: 3px solid #f1f1f1;
     background-color: white;
     border-radius: 30px;
@@ -115,6 +125,10 @@ button:hover {
 #loginContainer {
   padding: 20px;
   width:500px;
+}
+
+.loginInput{
+    margin-top:25px !important;
 }
 
 

@@ -67,6 +67,7 @@
     },
     methods:{
       limparCampos(){
+          this.autorId = 0
           this.card.titulo= ""
           this.card.descricao = ""
       },
@@ -121,9 +122,11 @@
           this.edit = true
           this.carregarCard(id)
         }
-        else
+        else{
           this.edit = false
-        
+          this.limparCampos()
+        }
+ 
         this.carregarAutores()
         document.getElementById('abrir').click();
       },
@@ -131,7 +134,7 @@
         document.getElementById('fechar').click();
       },
       carregarAutores(){
-        axios.post("http://localhost:8000/autor",).then( (result) => {
+        axios.post("http://localhost:8000/autorPorUsuario",{ usuarioId: this.$store.state.usuario.id }).then( (result) => {
           this.autores = result.data
         } )
       },
