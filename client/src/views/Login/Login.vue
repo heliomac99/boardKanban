@@ -48,7 +48,7 @@ import axios from 'axios';
             salvar(usuario){
                 axios.post('http://localhost:8000/usuario/validar', { "login" : usuario.login, "senha": usuario.senha}).then( (res) =>{ 
                     if(res.data.valido){
-                        this.$store.commit('login', res.data.usuario)
+                        this.$store.commit('login', { "usuario": res.data.usuario, "token": res.data.token })
                         this.$router.push('/home')
                     }                    
                     else
@@ -128,7 +128,7 @@ button:hover {
 }
 
 #loginForm{
-    padding-top:40px !important;
+    padding-top: 40px !important;
     width: 700px;
     height: fit-content;
     border: 3px solid #f1f1f1;

@@ -1,7 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import "bootstrap/dist/css/bootstrap.min.css"
-
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
@@ -22,7 +21,20 @@ library.add(faPen)
 library.add(faTrash)
 library.add(faArrowLeft)
 
+axios.interceptors.request.use(function (config) {
+    const token = store.state.tokenJWT;
+    config.headers.Authorization =  token;
+     
+    return config;
+});
 
+axios.interceptors.response.use(function (response) {
+    return response;
+  }, function (error) {
+    if(!error.response.data.valido)
+      router.push('/')
+    return Promise.reject(error);
+  });
 
 createApp(App)
 .component('font-awesome-icon', FontAwesomeIcon)
