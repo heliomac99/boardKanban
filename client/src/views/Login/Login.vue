@@ -69,6 +69,11 @@ import axios from 'axios';
 </script>
 
 <style>
+body, html {
+  min-height:100%;
+  height:100%;  /* if not working try vh instead of % */
+}
+
 .divInput{
     margin-bottom:10px;
 }
@@ -76,9 +81,13 @@ import axios from 'axios';
     position: absolute;
 }
 #wallpaper{
-    width: 100vw !important;
-    height: 100vh !important;
-    background:url(../../assets/teste.png);  
+    width: 100% !important;
+    background:url(../../assets/teste.png); 
+    height: 100%; 
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover; 
 }
 
 #loginDiv{
@@ -119,17 +128,17 @@ button:hover {
 }
 
 #loginForm{
+    padding-top:40px !important;
     width: 700px;
     height: fit-content;
     border: 3px solid #f1f1f1;
     background-color: white;
     border-radius: 25px;
-    padding: 30px;
+    padding: 20px;
     padding-bottom: 10px !important;
 }
 
 #loginContainer {
-  padding: 20px;
   width:500px;
 }
 

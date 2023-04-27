@@ -1,12 +1,13 @@
 ﻿<template>
     <div id="wallpaper">
         <div id="loginDiv">
-            <ValidationForm id="loginForm" :model="usuario" ref="validation" @save="salvar(usuario)">
+            <ValidationForm id="cadastroForm" :model="usuario" ref="validation" @save="salvar(usuario)">
                 <div class="container" id="loginContainer">
-
-                    <font-awesome-icon @click="irParaLogin()" style="font-size:xx-large; margin-bottom: 15px; cursor:pointer" icon="fa-solid fa-arrow-left" />
-                    <h3 id="cadastroUsuarioTitle">Cadastro de Usuário</h3>
-
+                    <div style="display:flex">
+                        <font-awesome-icon @click="irParaLogin()" style="font-size:xx-large; margin-right: 15px; cursor:pointer" icon="fa-solid fa-arrow-left" />
+                        <h3 id="cadastroUsuarioTitle">Cadastro de Usuário</h3>
+                    </div>
+                    
                     <div class="divInput">
                         <label class="loginLabel">Nome</label>
                         <input type="text" class="form-control loginInput" v-model="usuario.nome" placeholder="Insira seu nome">
@@ -77,6 +78,15 @@ import axios from 'axios';
     margin-bottom: 20px;
 }
 
+#cadastroForm{
+    width: 700px;
+    height: fit-content;
+    border: 3px solid #f1f1f1;
+    background-color: white;
+    border-radius: 25px;
+    padding: 20px;
+    padding-bottom: 10px !important;
+}
 
 </style>
 

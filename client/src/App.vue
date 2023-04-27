@@ -18,7 +18,7 @@
         </div>
         <a style="color:gray;">Bem vindo</a>
         <a style="color:gray; font-weight: 600;">{{getNomeUsuarioLogado}}</a>
-        <a style="color:#628E90; margin-right: 30px; cursor: pointer;" @click="logout()">(Sair)</a>
+        <a id="logout" @click="logout()">(Sair)</a>
     </nav>
     <router-view></router-view>
 </template>
@@ -47,6 +47,15 @@ export default {
 </script>
 
 <style>
+#logout{
+  color:#628E90;
+  margin-right: 30px;
+  cursor: pointer;
+}
+
+#logout:hover{
+  color:#bc6c25;
+}
 .spanErro{
   color: red !important;
 }
