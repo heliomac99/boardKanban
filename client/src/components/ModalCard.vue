@@ -107,6 +107,7 @@
         }
         else{
           axios.post("http://localhost:8000/card/edit", card).then(() => {
+              this.$refs.toast.ativar('Card salvo com sucesso.', 'sucesso')
               this.fechar()
               this.$emit('refresh')
               this.limparCampos()
