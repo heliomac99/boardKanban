@@ -15,11 +15,14 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import VueClickAway from "vue3-click-away";
 import emailjs from 'emailjs-com';
 import store from './vuex'
+import { toast } from 'vue3-toastify';
 
 library.add(faPlus)
 library.add(faPen)
 library.add(faTrash)
 library.add(faArrowLeft)
+
+axios.defaults.baseURL = 'http://localhost:8000/'
 
 axios.interceptors.request.use(function (config) {
     const token = store.state.tokenJWT;
@@ -31,10 +34,13 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use(function (response) {
     return response;
   }, function (error) {
-    if(!error.response.data.valido)
+    toast(error.response.data.mensagem, { autoClose:1000, theme: 'light', type: 'error'})
+    if(error.request.status == 401) //token não autorizado
       router.push('/')
+    
     return Promise.reject(error);
   });
+
 
 createApp(App)
 .component('font-awesome-icon', FontAwesomeIcon)

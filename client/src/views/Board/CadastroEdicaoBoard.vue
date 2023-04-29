@@ -24,16 +24,18 @@
             </div>
         </div>
     </div>
+    <ToastComponent ref="toast"></ToastComponent>
 </template>
 
 <script>
   import ModalPergunta from '../../components/ModalPergunta.vue'
   import ValidationForm from '../../components/ValidationForm.vue'
   import axios from 'axios'
+  import ToastComponent from '@/components/ToastComponent.vue'
 
   export default {
         name: 'CadastroEdicaoBoardView',
-        components: { ModalPergunta, ValidationForm },
+        components: { ModalPergunta, ValidationForm, ToastComponent },
         data() {
             return {
                 board: {
@@ -51,18 +53,18 @@
         methods: {
             insereColuna(nome, ordem){
                 let coluna = {"nome": nome, "ordem": ordem, "idBoard": this.board.id}
-                axios.post('http://localhost:8000/coluna/add', coluna)
+                axios.post('coluna/add', coluna)
             },
             salvar(board) { 
                 if(board.id > 0){
-                    axios.post('http://localhost:8000/board/update', board).then(
-                        this.$swal("Sucesso", "Board registrado com sucesso!", "success"),
+                    axios.post('board/update', board).then(
+                        this.$refs.toast.ativar('Board salvo com sucesso.', 'sucesso'),
                         this.$router.back()
                     )
                 }
                 else{
-                    axios.post('http://localhost:8000/board/add', board).then(
-                        this.$swal("Sucesso", "Board registrado com sucesso!", "success"),
+                    axios.post('board/add', board).then(
+                        this.$refs.toast.ativar('Board salvo com sucesso.', 'sucesso'),
                         this.$router.back()                 
                     )
                 }      
@@ -75,14 +77,14 @@
                 })
 
                 if (ok) {
-                    axios.post('http://localhost:8000/board/delete', {id: board.id}).then(() => { 
-                        this.$swal("Sucesso", "Board excluído com sucesso!", "success"),
+                    axios.post('board/delete', {id: board.id}).then(() => { 
+                        this.$refs.toast.ativar('Board excluído com sucesso.', 'sucesso'),
                         this.$router.back()
                     })
                 }
             },
             recuperarDados() { 
-                axios.post('http://localhost:8000/board/carregarRegistro', {id: this.board.id}).then( (result) => {
+                axios.post('board/carregarRegistro', {id: this.board.id}).then( (result) => {
                     this.board.nome = result.data[0].nome                
                    }
                 )

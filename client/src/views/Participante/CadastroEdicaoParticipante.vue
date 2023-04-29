@@ -31,6 +31,7 @@
             </div>
         </div>
     </div>
+    <ToastComponent ref="toast"></ToastComponent>
 </template>
 
 <script>
@@ -38,10 +39,11 @@
   import ValidationForm from '../../components/ValidationForm.vue'
   import axios from 'axios'
   import emailjs from '@emailjs/browser';
+  import ToastComponent from '@/components/ToastComponent.vue'
 
   export default {
         name: 'CadastroEdicaoParticipanteView',
-        components: { ModalPergunta, ValidationForm },
+        components: { ModalPergunta, ValidationForm, ToastComponent },
         data() {
             return {
                 participante: {
@@ -56,7 +58,7 @@
             salvar(participante) { 
                 if(participante.id > 0){
                     axios.post('http://localhost:8000/autor/update', participante).then(
-                        this.$swal("Sucesso", "Paciente editado com sucesso!", "success"),
+                        this.$refs.toast.ativar('Participante salvo com sucesso.', 'sucesso'),
                         this.$router.back()
                     )
                 }
@@ -65,7 +67,7 @@
                             if(!res.data.emailValido)
                                 this.$refs.validation.insereErro("email", "E-mail já está sendo utilizado.")
                             else{
-                                this.$swal("Sucesso", "Participante registrado com sucesso!", "success"),
+                                this.$refs.toast.ativar('Participante salvo com sucesso.', 'sucesso'),
                                 this.$router.back()
                             }
                         }
@@ -80,7 +82,7 @@
                     }, "NakJZ8PgA-LMP8Imr") 
                 }
                 catch(erro){
-                    console.log(erro)
+                    this.$refs.toast.ativar(erro, 'erro')
                 }    
             },           
             async excluir(participante) { 
@@ -92,7 +94,7 @@
 
                 if (ok) {
                     axios.post('http://localhost:8000/autor/delete', {id: participante.id}).then(() => { 
-                        this.$swal("Sucesso", "Participante excluído com sucesso!", "success"),
+                        this.$refs.toast.ativar('Participante excluído com sucesso.', 'sucesso'),
                         this.$router.back()
                     })
                 }

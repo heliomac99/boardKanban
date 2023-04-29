@@ -1,4 +1,4 @@
-import express from 'express';
+﻿import express from 'express';
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import UsuarioController from './controllers/usuarioController.js';
@@ -31,15 +31,14 @@ app.get("/", (req, res, next) => {
 
 function validaJWT(req, res, next){
     const token = req.headers['authorization'];
-    if (!token) return res.status(401).json({ valido: false, mensagem: 'No token provided.' });
+    if (!token) return res.status(401).json({ valido: false, mensagem: 'Sua sessão expirou.' });
     
     jwt.verify(token, 'f9bf78b9a18ce6d46a0cd2b0b86df9da', function(err) {
-      if (err) return res.status(500).json({ valido: false, mensagem: 'Failed to authenticate token.' });
+      if (err) return res.status(401).json({ valido: false, mensagem: 'Sua sessão expirou.' });
 
       next();
     });
 }
-
 
 app.post("/autor", validaJWT, autorController.index);
 app.post("/autorPorUsuario", validaJWT, autorController.carregarRegistrosPorUsuario);

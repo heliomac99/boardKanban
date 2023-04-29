@@ -26,16 +26,17 @@
             </ValidationForm>
         </div>
     </div>
-    
+    <Toast ref="toast"></Toast>
 </template>
 
 <script>
 import ValidationForm from '@/components/ValidationForm.vue';
 import axios from 'axios';
+import Toast from '@/components/ToastComponent.vue';
 
   export default {
         name: 'LoginView',
-        components: {ValidationForm },
+        components: {ValidationForm, Toast },
         data() {
             return {
                 usuario:{
@@ -46,8 +47,9 @@ import axios from 'axios';
         },
         methods: {
             salvar(usuario){
-                axios.post('http://localhost:8000/usuario/validar', { "login" : usuario.login, "senha": usuario.senha}).then( (res) =>{ 
+                axios.post('usuario/validar', { "login" : usuario.login, "senha": usuario.senha}).then( (res) =>{ 
                     if(res.data.valido){
+                        this.$refs.toast.ativar('Bem vindo', 'sucesso')
                         this.$store.commit('login', { "usuario": res.data.usuario, "token": res.data.token })
                         this.$router.push('/home')
                     }                    

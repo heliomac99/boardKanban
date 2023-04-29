@@ -9,7 +9,7 @@ class ColunaController{
         var params = []
         db.all(sql, params, (err, rows) => {
             if (err) {
-              res.status(400).json({"error":err.message});
+              res.status(400).json({mensagem:err.message});
               return;
             }
             res.send(rows)
@@ -22,7 +22,7 @@ class ColunaController{
 
         db.run(sql, [cor, colunaId], function (err, result){
             if(err)
-                throw err
+                res.status(500).send({mensagem: err.message});
             else{
                 res.json("")
             }
@@ -37,7 +37,7 @@ class ColunaController{
 
         db.run(sql, [nome, ordem, boardId, cor], function (err, result){
             if(err)
-                throw err
+                res.status(500).send({mensagem: err.message});
             else{
                 res.json("")
             }
@@ -50,11 +50,11 @@ class ColunaController{
 
         db.run(sql, [id], function (err){
             if(err)
-                throw err
+                res.status(500).send({mensagem: err.message});
             else{
                 db.run(deleteCards, [id], function (err){
                     if(err)
-                        throw err
+                        res.status(500).send({mensagem: err.message});
                     else{
                         res.json("")
                     }
@@ -68,8 +68,7 @@ class ColunaController{
 
         db.all(sql, [boardId], (err, rows) => {
             if (err) {
-                console.error(err.message);
-                res.status(500).send({message: err.message});
+                res.status(500).send({mensagem: err.message});
             } else {
                 res.status(200).send(rows);
             }

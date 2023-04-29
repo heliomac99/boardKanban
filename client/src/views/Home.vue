@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div align="center" @click="fecharMenu()">
     <div class="col-2" style="margin-bottom: 30px;">
       <select class="form-select" v-model="boardSelecionado" @change="carregarColunas()">
@@ -27,6 +27,7 @@
 
     <MenuCard ref="menu"></MenuCard>
     <ModalCard ref="modal" @refresh="carregarColunas"></ModalCard>
+    <ToastComponent ref="toast"></ToastComponent>
   </div>
 
 </template>
@@ -34,11 +35,12 @@
 <script>
 import ModalCard from '../components/ModalCard.vue'
 import MenuCard from '../components/MenuCard.vue'
+import ToastComponent from '../components/ToastComponent.vue'
 import axios from "axios";
 
 export default {
   name: 'BoardView',
-  components: { ModalCard, MenuCard },
+  components: { ModalCard, MenuCard, ToastComponent },
   data(){
     return{
       idCardSelecionado: 0,
@@ -91,7 +93,7 @@ export default {
       this.$refs.modal.abrir(id)
     },
     excluir(id){
-      axios.post("http://localhost:8000/card/delete", {id: id}).then( () => { this.carregarColunas() })
+      axios.post("http://localhost:8000/card/delete", {id: id}).then( () => { this.carregarColunas(), this.$refs.toast.ativar('Card excluído com sucesso.', 'sucesso')})
     },
     emMudancaDeTamanhoDaTela() {
       window.addEventListener("resize", () => {

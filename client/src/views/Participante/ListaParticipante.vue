@@ -4,6 +4,7 @@
     <button class="btn btn-primary primaryColorBtn" @click="inserir" style="margin-bottom:20px">Inserir Participante <font-awesome-icon icon="fa-solid fa-plus"/></button>
     <DataTable ref="dataTable" :colLabels="colLabels" :dataFields="dataFields" :dataUrl="'http://localhost:8000/autorPorUsuario'" :paramsUrl="{ usuarioId: this.$store.state.usuario.id }" :showEditButton="true" :showRemoveButton="true" @editar="editar" @excluir="excluir" :key="dataTableKey" :id="'id'"></DataTable>
     <ModalPergunta ref="modalPergunta"></ModalPergunta>
+    <ToastComponent ref="toast"></ToastComponent>
   </div>
 </template>
 
@@ -11,9 +12,11 @@
 import ModalPergunta from '../../components/ModalPergunta.vue'
 import DataTable from '../../components/DataTable.vue'
 import axios from 'axios'
+import ToastComponent from '@/components/ToastComponent.vue'
+
 export default {
   name: 'ListaParticipanteView',
-  components: { DataTable, ModalPergunta },
+  components: { DataTable, ModalPergunta, ToastComponent },
   data(){
     return {
       colLabels: ['Nome', 'E-mail'],
@@ -36,13 +39,13 @@ export default {
       })
 
       if (ok) {
-          axios.post('http://localhost:8000/autor/delete', {id: participante.id}).then((result) => {
+          axios.post('autor/delete', {id: participante.id}).then((result) => {
               if(result.data.podeExcluir){
-                this.$swal("Sucesso", "Participante excluído com sucesso!", "success")
+                this.$refs.toast.ativar('Participante excluído com sucesso.', 'sucesso'),
                 this.dataTableKey++
               }
               else
-                this.$swal("Erro", "Participante possui vínculo com algum Card!", "error")
+                this.$refs.toast.ativar('Participante possui vínculo com algum card.', 'erro')
           })
       }
     },

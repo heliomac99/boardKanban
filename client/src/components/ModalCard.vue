@@ -41,6 +41,7 @@
         </div>
       </div>
     </div>
+    <ToastComponent ref="toast"></ToastComponent>
 </template>
   
   <script>
@@ -48,10 +49,11 @@
   import ValidationForm from './ValidationForm.vue'
   import ModalPergunta from '../components/ModalPergunta.vue'
   import emailjs from '@emailjs/browser';
+  import ToastComponent from './ToastComponent.vue'
   
   export default {
     name: 'ModalCard',
-    components: { ValidationForm, ModalPergunta },
+    components: { ValidationForm, ModalPergunta, ToastComponent },
     data(){
       return {
         card:{
@@ -93,6 +95,7 @@
         this.enviarEmail(card)
         if(!this.edit){
           axios.post("http://localhost:8000/card/add", card).then(() => {
+              this.$refs.toast.ativar('Card salvo com sucesso.', 'sucesso')
               this.fechar()
               this.$emit('refresh')
               this.limparCampos()
@@ -155,6 +158,7 @@
 
                 if (ok) {
                     axios.post('http://localhost:8000/card/delete', {id: id}).then(() => { 
+                        this.$refs.toast.ativar('Card excluído com sucesso.', 'sucesso')
                         this.fechar()
                         this.$emit('refresh')
                         this.limparCampos()

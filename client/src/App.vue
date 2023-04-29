@@ -40,6 +40,9 @@ export default {
       this.$store.commit('logout')
       this.$router.push({ name: 'Login' })
     }
+  },
+  mounted(){
+    
   }
 
 
