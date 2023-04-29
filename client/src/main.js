@@ -35,8 +35,10 @@ axios.interceptors.response.use(function (response) {
     return response;
   }, function (error) {
     toast(error.response.data.mensagem, { autoClose:1000, theme: 'light', type: 'error'})
-    if(error.request.status == 401) //token não autorizado
+    if(error.request.status == 401) { //token não autorizado
       router.push('/')
+      store.commit('logout')
+    }
     
     return Promise.reject(error);
   });

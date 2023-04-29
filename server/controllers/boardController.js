@@ -55,13 +55,37 @@ class BoardController{
     }
     excluir(req, res){
         let sql = `DELETE from board WHERE id = ?`
+        let selectColunas = `SELECT * from coluna where boardId = ?`
+        let deleteColunas = `DELETE from coluna where boardId = ?`
+        let deleteCards = `DELETE from card WHERE colunaId = ?`
         let id = req.body.id
 
         db.run(sql, [id], function (err, result){
             if(err)
                 throw err
             else{
-                res.json("")
+                db.all(selectColunas, [id], (err, rows) => {
+                    if (err) {
+                        console.log(err)
+                        res.status(500).send({message: err.message});
+                    } else {
+                        rows.forEach(element => {
+                            db.run(deleteCards, [element.id], function (err){
+                                if(err)
+                                    res.status(500).send({mensagem: err.message});
+                                else{
+                                    db.run(deleteColunas, [id], function (err){
+                                        if(err)
+                                            res.status(500).send({mensagem: err.message});
+                                        else{
+                                            res.json("")
+                                        }
+                                    })
+                                }
+                            })
+                        })   
+                    }
+                });
             }
         })
     }

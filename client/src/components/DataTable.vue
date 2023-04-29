@@ -71,16 +71,16 @@
             //             this.filteredData[j][dateDataFields[i].value] = this.formatDate(this.filteredData[j][dateDataFields[i].value])            
             // }
         },
-        async created() {
+        created() {
             if(!this.paramsUrl){
-                await axios.post(this.dataUrl).then( (result) => {
+                axios.post(this.dataUrl).then( (result) => {
                     this.originalData = result.data
                     this.filteredData = this.originalData
                     //this.dataFormater()
                 })
             }
             else{
-                await axios.post(this.dataUrl, this.paramsUrl).then( (result) => {
+                axios.post(this.dataUrl, this.paramsUrl).then( (result) => {
                     this.originalData = result.data
                     this.filteredData = this.originalData 
                     //this.dataFormater()                   
