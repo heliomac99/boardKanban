@@ -7,7 +7,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(item, index) in filteredData" :key="index">
+            <tr v-for="(item, index) in data" :key="index">
                 <td v-if="showEditButton || showRemoveButton ||  showAddButton" align="center">
                     <button title="Editar" style="margin-left:10px;"  v-if="showEditButton" type="button" @click="$emit('editar', item )" class="btn btn-primary primaryColorBtn">
                         <font-awesome-icon icon="fa-solid fa-pen" />
@@ -23,6 +23,27 @@
                 <td v-for="(dataField, index) in dataFields" :key="index">{{item[dataField]}}</td>
             </tr>
         </tbody>
+        <tfoot>
+            <tr>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item">
+                        <a @click="prevPage" class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        </li>
+                        <li class="page-item" v-for="pagina in totalPaginas" :key="pagina" @click="setPage(pagina)" :disabled="pagina === paginaAtual"><a class="page-link" href="#">{{ pagina }}</a></li>
+                        <li class="page-item">
+                        <a @click="nextPage" class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                        </li>
+                    </ul>
+                </nav>
+            </tr>
+        </tfoot>
     </table>
 </template>
 
@@ -38,57 +59,86 @@
             showAddButton: null,
             dataUrl: null,
             paramsUrl: null,
-            id: null
+            id: null,
+            pageSize: {
+                type: Number,
+                default: 5
+            }
         },
         data() {
             return {
-                filteredData: null,
-                originalData: null
+                data: null,
+                originalData: null,
+                totalPaginas: 0,
+                paginaAtual: 1
             }
         },
         methods: {
             filter(propertyName, value) {
-                this.filteredData = this.originalData
+                this.data = this.originalData
                 if (value) {
-                    this.filteredData = this.filteredData.filter(function (el) {
+                    this.data = this.data.filter(function (el) {
                         return el[propertyName].toLowerCase().includes(value.toLowerCase())
                     });
                 } 
             },
-            // formatDate(date){
-            //     const [ano, mes, dia] = date.split('-');
-            //     const result = `${dia}/${mes}/${ano}`;
-            //     return result
-            // },
-            // dataFormater() {
-            //     var dateDataFields = this.dataFields.filter(function (el) { return el.type == 'date' });
-
-            //     var i = 0
-            //     var j = 0
-
-            //     for(i = 0; i < dateDataFields.length; i++)
-            //         for(j = 0; j < this.filteredData.length; j++)
-            //             this.filteredData[j][dateDataFields[i].value] = this.formatDate(this.filteredData[j][dateDataFields[i].value])            
-            // }
+            calculatotalPaginas() {
+                this.totalPaginas =  Math.ceil(this.originalData.length / this.pageSize)
+            },
+            dataPaginado() {
+                const start = (this.paginaAtual - 1) * this.pageSize
+                const end = start + this.pageSize
+                this.data = this.originalData.slice(start, end)
+            },
+            nextPage() {
+                if(this.paginaAtual < this.totalPaginas)
+                    this.paginaAtual++
+                    this.dataPaginado()
+            },
+            prevPage() {
+                if(this.paginaAtual > 1){
+                    this.paginaAtual--
+                    this.dataPaginado()
+                }
+            },
+            setPage(pagina) {
+                this.paginaAtual = pagina
+                this.dataPaginado()
+            }
         },
         created() {
             if(!this.paramsUrl){
                 axios.post(this.dataUrl).then( (result) => {
                     this.originalData = result.data
-                    this.filteredData = this.originalData
-                    //this.dataFormater()
+                    this.data = this.originalData
+                    this.dataPaginado()
+                    this.calculatotalPaginas()  
                 })
             }
             else{
                 axios.post(this.dataUrl, this.paramsUrl).then( (result) => {
                     this.originalData = result.data
-                    this.filteredData = this.originalData 
-                    //this.dataFormater()                   
+                    this.data = this.originalData  
+                    this.dataPaginado()
+                    this.calculatotalPaginas()               
                 })
             } 
         }
     }
 </script>
+<style>
+.page-link{
+    border: 0 !important;
+    color:gray;
+}
+.page-link:hover{
+    color:#bc6c25;
+}
+.page-link:focus {
+    color:#bc6c25 !important;
+    box-shadow: none !important;
+}
+</style>
 
 
 
