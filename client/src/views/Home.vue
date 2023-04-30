@@ -26,7 +26,7 @@
 
 
     <MenuCard ref="menu"></MenuCard>
-    <ModalCard ref="modal" @refresh="carregarColunas"></ModalCard>
+    <ModalCard v-if="sessaoValida" ref="modal" @refresh="carregarColunas"></ModalCard>
     <ToastComponent ref="toast"></ToastComponent>
   </div>
 
@@ -37,6 +37,7 @@ import ModalCard from '../components/ModalCard.vue'
 import MenuCard from '../components/MenuCard.vue'
 import ToastComponent from '../components/ToastComponent.vue'
 import axios from "axios";
+import { mapState } from 'vuex';
 
 export default {
   name: 'BoardView',
@@ -49,8 +50,10 @@ export default {
       colunas: [],
       boardSelecionado:null,
       idPrimeiraColuna: null,
+      sessaoValida: true
     }
   },
+  computed: mapState(['sessaoValida']),
   methods:{ 
     style(coluna){
       return {
@@ -61,7 +64,8 @@ export default {
       this.$refs.menu.abrir(card, e.clientX, e.clientY)
     },
     fecharMenu(){
-      this.$refs.menu.fechar()
+      if(this.$refs.menu)
+        this.$refs.menu.fechar()
     },
     abrirModal(id, colunaId){
       this.$refs.modal.abrir(id, colunaId)
@@ -74,7 +78,8 @@ export default {
     carregarColunas(){
       axios.post('http://localhost:8000/board/carregarBoard', { "boardId" : this.boardSelecionado }).then((result) => {
         this.colunas = result.data
-        this.idPrimeiraColuna = this.colunas[0].id
+        if(this.colunas[0])
+          this.idPrimeiraColuna = this.colunas[0].id
       })
     },
     moveu(id, idColunaOrigem){
@@ -104,7 +109,8 @@ export default {
   mounted(){
     this.carregarBoards()
     this.emMudancaDeTamanhoDaTela()
-  }
+  },
+  
 }
 </script>
 

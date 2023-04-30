@@ -60,4 +60,17 @@ const router = createRouter({
     routes
 })
 
+router.beforeEach((to, from, next) => {
+
+    let modalBackground = document.querySelector('.modal-backdrop')
+    let modal = document.querySelector('.modal-dialog')
+
+    if (modalBackground) {
+      modalBackground.remove()
+      modal.remove()
+    }
+  
+    next()
+  })
+
 export default router;

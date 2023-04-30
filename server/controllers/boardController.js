@@ -83,7 +83,8 @@ class BoardController{
                                     })
                                 }
                             })
-                        })   
+                        })
+                        res.json("")   
                     }
                 });
             }

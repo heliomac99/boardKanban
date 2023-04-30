@@ -1,4 +1,4 @@
-﻿import express from 'express';
+import express from 'express';
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import UsuarioController from './controllers/usuarioController.js';
@@ -7,6 +7,7 @@ import BoardController from './controllers/boardController.js';
 import ColunaController from './controllers/colunaController.js';
 import AutorController from './controllers/autorController.js';
 import jwt from'jsonwebtoken'
+import morgan from 'morgan';
 
 const usuarioController = new UsuarioController
 const cardController = new CardController
@@ -18,6 +19,7 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(morgan('combined'))
 
 var HTTP_PORT = 8000 
 

@@ -17,6 +17,7 @@ import emailjs from 'emailjs-com';
 import store from './vuex'
 import { toast } from 'vue3-toastify';
 
+
 library.add(faPlus)
 library.add(faPen)
 library.add(faTrash)
@@ -34,7 +35,9 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use(function (response) {
     return response;
   }, function (error) {
-    toast(error.response.data.mensagem, { autoClose:1000, theme: 'light', type: 'error'})
+    if(error.response)
+      toast(error.response.data.mensagem, { autoClose:1000, theme: 'light', type: 'error'})
+    
     if(error.request.status == 401) { //token não autorizado
       router.push('/')
       store.commit('logout')
