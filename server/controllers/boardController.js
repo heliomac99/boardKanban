@@ -53,7 +53,7 @@ class BoardController{
             }
         })
     }
-    excluir(req, res){
+    excluir(req, res, next){
         let sql = `DELETE from board WHERE id = ?`
         let selectColunas = `SELECT * from coluna where boardId = ?`
         let deleteColunas = `DELETE from coluna where boardId = ?`
@@ -77,14 +77,12 @@ class BoardController{
                                     db.run(deleteColunas, [id], function (err){
                                         if(err)
                                             res.status(500).send({mensagem: err.message});
-                                        else{
-                                            res.json("")
-                                        }
                                     })
                                 }
                             })
                         })
-                        res.json("")   
+                        res.json("")
+
                     }
                 });
             }

@@ -70,7 +70,7 @@
                 data: null,
                 originalData: null,
                 totalPaginas: 0,
-                paginaAtual: 1
+                paginaAtual: 1,
             }
         },
         methods: {
@@ -93,37 +93,48 @@
             nextPage() {
                 if(this.paginaAtual < this.totalPaginas)
                     this.paginaAtual++
+                    this.$store.commit('setPagina', this.paginaAtual)
                     this.dataPaginado()
             },
             prevPage() {
                 if(this.paginaAtual > 1){
                     this.paginaAtual--
+                    this.$store.commit('setPagina', this.paginaAtual)
                     this.dataPaginado()
                 }
             },
             setPage(pagina) {
-                this.paginaAtual = pagina
+                if(pagina > 0){
+                    this.paginaAtual = pagina
+                    this.$store.commit('setPagina', pagina)
+                    this.dataPaginado()
+                }
+            },
+            dataOp(result){
+                this.originalData = result.data
+                this.data = this.originalData
                 this.dataPaginado()
+                this.calculatotalPaginas()                 
+                this.setPage(this.$store.state.paginaAtual)  
+                if(this.data.length == 0) 
+                    this.setPage(this.$store.state.paginaAtual-1) 
+            },
+            load(){
+                if(!this.paramsUrl){
+                    axios.post(this.dataUrl).then( (result) => {
+                        this.dataOp(result)
+                    })
+                }
+                else{
+                    axios.post(this.dataUrl, this.paramsUrl).then( (result) => {
+                        this.dataOp(result)           
+                    })
+                } 
             }
         },
         created() {
-            if(!this.paramsUrl){
-                axios.post(this.dataUrl).then( (result) => {
-                    this.originalData = result.data
-                    this.data = this.originalData
-                    this.dataPaginado()
-                    this.calculatotalPaginas()  
-                })
-            }
-            else{
-                axios.post(this.dataUrl, this.paramsUrl).then( (result) => {
-                    this.originalData = result.data
-                    this.data = this.originalData  
-                    this.dataPaginado()
-                    this.calculatotalPaginas()               
-                })
-            } 
-        }
+            this.load()
+        },
     }
 </script>
 <style>

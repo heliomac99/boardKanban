@@ -2,11 +2,11 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from './views/Home.vue'
 import ListaParticipanteView from './views/Participante/ListaParticipante.vue'
 import CadastroEdicaoParticipanteView from './views/Participante/CadastroEdicaoParticipante.vue'
-
 import CadastroEdicaoBoardView from './views/Board/CadastroEdicaoBoard.vue'
 import ListaBoardView from './views/Board/ListaBoard.vue'
 import LoginView from './views/Login/Login.vue'
 import CadastroUsuarioView from './views/Login/CadastroUsuario.vue'
+import store from './vuex';
 
 
 import CadastroEdicaoColunaView from './views/Board/CadastroEdicaoColuna.vue'
@@ -64,6 +64,7 @@ router.beforeEach((to, from, next) => {
 
     let modalBackground = document.querySelector('.modal-backdrop')
     let modal = document.querySelector('.modal-dialog')
+    store.commit('setPagina', 1)
 
     if (modalBackground) {
       modalBackground.remove()

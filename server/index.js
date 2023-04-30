@@ -19,7 +19,7 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(morgan('combined'))
+//app.use(morgan('combined'))
 
 var HTTP_PORT = 8000 
 

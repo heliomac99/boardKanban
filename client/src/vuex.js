@@ -5,7 +5,8 @@ const store = createStore({
     state () {
       return {
         usuario: { "id" : -1, "nome": ''},
-        tokenJWT: null
+        tokenJWT: null,
+        paginaAtual: 1
       }
     },
     mutations: {
@@ -13,11 +14,16 @@ const store = createStore({
         if(obj) {
             state.usuario = { "id" : obj.usuario.id, "nome": obj.usuario.nome}
             state.tokenJWT = obj.token
+            state.paginaAtual = 1
         }
       },
       logout(state) {
         state.usuario = { "id" : -1, "nome": ""}
         state.tokenJWT = null
+      },
+      setPagina(state, pagina) {
+        if(pagina > 0)
+          state.paginaAtual = pagina
       },
     },
     getters:{
