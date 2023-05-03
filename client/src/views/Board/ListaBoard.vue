@@ -2,7 +2,7 @@
   <div align="center">
     <h3 class="secondaryColor" style="margin-bottom:40px">Lista Boards</h3>
     <button class="btn btn-primary primaryColorBtn" @click="inserir" style="margin-bottom:20px">Inserir Board <font-awesome-icon icon="fa-solid fa-plus"/></button>
-    <DataTable ref="dataTable" :colLabels="colLabels" :dataFields="dataFields" :dataUrl="'boardPorUsuario'" :paramsUrl="{usuarioId: this.$store.state.usuario.id}" :showEditButton="true" :showRemoveButton="true" :showAddButton="true" @editar="editar" @excluir="excluir" @addItem="coluna" :key="dataTableKey" :id="'id'"></DataTable>
+    <DataTable ref="dataTable" :colLabels="colLabels" :dataFields="dataFields" :dataUrl="'boardPorUsuario'" :showEditButton="true" :showRemoveButton="true" :showAddButton="true" @editar="editar" @excluir="excluir" @addItem="coluna" :id="'id'"></DataTable>
     <ModalPergunta ref="modalPergunta"></ModalPergunta>
   </div>
   <ToastComponent ref="toast"></ToastComponent>
@@ -21,7 +21,6 @@ export default {
     return {
       colLabels: ['Nome'],
       dataFields: ['nome'],
-      dataTableKey: 0
     }
   },
   methods: {
@@ -39,9 +38,9 @@ export default {
       })
 
       if (ok) {
-          axios.post('http://localhost:8000/board/delete', {id: board.id}).then( 
+          axios.post('http://localhost:8000/board/delete', { id: board.id }).then( 
                 this.$refs.toast.ativar('Board excluído com sucesso.', 'sucesso'),
-                this.dataTableKey++
+                this.$refs.dataTable.load()
           )
       }
     },

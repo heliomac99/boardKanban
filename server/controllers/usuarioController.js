@@ -51,8 +51,8 @@ class UsuarioController{
                 throw err
             else{
                 if(rows.length > 0){
-                    const token = jwt.sign( {id: rows[0].id} , 'f9bf78b9a18ce6d46a0cd2b0b86df9da', {
-                        expiresIn: 500 // expires in 5min
+                    const token = jwt.sign( { id: rows[0].id } , 'f9bf78b9a18ce6d46a0cd2b0b86df9da', {
+                        expiresIn: 500  // expires in 5min
                     });
                     res.json({valido: true, usuario: rows[0], token: token})
                 }

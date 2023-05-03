@@ -1,4 +1,5 @@
 import db from '../database.js'
+import index from '../index.js'
 
 class BoardController{
     constructor(){
@@ -17,7 +18,7 @@ class BoardController{
     }
     carregarRegistrosPorUsuario(req, res){
         var sql = "select * from board where usuarioId = ?"
-        var usuarioId = req.body.usuarioId
+        var usuarioId = index.usuarioId()
         
         db.all(sql, [usuarioId], (err, rows) => {
             if (err) {
@@ -30,7 +31,7 @@ class BoardController{
     inserir(req, res){
         let sql = `INSERT INTO board (nome, usuarioId) VALUES (?,?)`
         let nome = req.body.nome
-        let usuarioId = req.body.usuarioId
+        let usuarioId = index.usuarioId()
 
         db.run(sql, [nome, usuarioId], function (err, result){
             if(err)
@@ -43,7 +44,7 @@ class BoardController{
     editar(req, res){
         let sql = `UPDATE board SET nome = ?, usuarioId = ? WHERE id = ?`
         let id = req.body.id
-        let usuarioId = req.body.usuarioId
+        let usuarioId = index.usuarioId()
         let nome = req.body.nome
         db.run(sql, [nome, usuarioId, id], function (err, result){
             if(err)
@@ -53,14 +54,14 @@ class BoardController{
             }
         })
     }
-    excluir(req, res, next){
+    async excluir(req, res, next){
         let sql = `DELETE from board WHERE id = ?`
         let selectColunas = `SELECT * from coluna where boardId = ?`
         let deleteColunas = `DELETE from coluna where boardId = ?`
         let deleteCards = `DELETE from card WHERE colunaId = ?`
         let id = req.body.id
 
-        db.run(sql, [id], function (err, result){
+        await db.run(sql, [id], function (err, result){
             if(err)
                 throw err
             else{
@@ -81,10 +82,9 @@ class BoardController{
                                 }
                             })
                         })
-                        res.json("")
-
                     }
                 });
+                res.json("")
             }
         })
     }
@@ -133,7 +133,6 @@ class BoardController{
             res.send(uniqueColunms)       
         })
     }
-
 }
 
 export default BoardController

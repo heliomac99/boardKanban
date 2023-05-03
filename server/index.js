@@ -7,7 +7,6 @@ import BoardController from './controllers/boardController.js';
 import ColunaController from './controllers/colunaController.js';
 import AutorController from './controllers/autorController.js';
 import jwt from'jsonwebtoken'
-import morgan from 'morgan';
 
 const usuarioController = new UsuarioController
 const cardController = new CardController
@@ -15,11 +14,10 @@ const boardController = new BoardController
 const colunaController = new ColunaController
 const autorController = new AutorController
 
-const app = express();
+const app = express()
 
 app.use(cors());
 app.use(bodyParser.json());
-//app.use(morgan('combined'))
 
 var HTTP_PORT = 8000 
 
@@ -31,11 +29,16 @@ app.get("/", (req, res, next) => {
     res.json({"message":"Ok"})
 });
 
+let usuarioId = 0
+
 function validaJWT(req, res, next){
     const token = req.headers['authorization'];
+
     if (!token) return res.status(401).json({ valido: false, mensagem: 'Sua sessão expirou.' });
     
-    jwt.verify(token, 'f9bf78b9a18ce6d46a0cd2b0b86df9da', function(err) {
+    jwt.verify(token, 'f9bf78b9a18ce6d46a0cd2b0b86df9da', function(err, decoded) {
+      if(decoded)
+        usuarioId = decoded.id
       if (err) return res.status(401).json({ valido: false, mensagem: 'Sua sessão expirou.' });
 
       next();
@@ -77,5 +80,12 @@ app.post("/board/carregarBoard", validaJWT, boardController.carregarBoardComplet
 app.use(function(req, res){
     res.status(404);
 });
+
+export default {
+    usuarioId: function () {
+        return usuarioId
+    }
+};
+
 
 

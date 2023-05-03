@@ -2,7 +2,7 @@
   <div align="center">
     <h3 class="secondaryColor" style="margin-bottom:40px">Lista Participantes</h3>
     <button class="btn btn-primary primaryColorBtn" @click="inserir" style="margin-bottom:20px">Inserir Participante <font-awesome-icon icon="fa-solid fa-plus"/></button>
-    <DataTable ref="dataTable" :colLabels="colLabels" :dataFields="dataFields" :dataUrl="'http://localhost:8000/autorPorUsuario'" :paramsUrl="{ usuarioId: this.$store.state.usuario.id }" :showEditButton="true" :showRemoveButton="true" @editar="editar" @excluir="excluir" :key="dataTableKey" :id="'id'"></DataTable>
+    <DataTable ref="dataTable" :colLabels="colLabels" :dataFields="dataFields" :dataUrl="'http://localhost:8000/autorPorUsuario'" :showEditButton="true" :showRemoveButton="true" @editar="editar" @excluir="excluir" :id="'id'"></DataTable>
     <ModalPergunta ref="modalPergunta"></ModalPergunta>
     <ToastComponent ref="toast"></ToastComponent>
   </div>
@@ -21,7 +21,6 @@ export default {
     return {
       colLabels: ['Nome', 'E-mail'],
       dataFields: ['nome', 'email'],
-      dataTableKey: 0
     }
   },
   methods: {
@@ -42,7 +41,7 @@ export default {
           axios.post('autor/delete', {id: participante.id}).then((result) => {
               if(result.data.podeExcluir){
                 this.$refs.toast.ativar('Participante excluído com sucesso.', 'sucesso'),
-                this.dataTableKey++
+                this.$refs.dataTable.load()
               }
               else
                 this.$refs.toast.ativar('Participante possui vínculo com algum card.', 'erro')

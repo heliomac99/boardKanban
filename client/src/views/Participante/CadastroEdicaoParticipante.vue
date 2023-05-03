@@ -50,7 +50,6 @@
                     id: this.$route.params.codigoParticipante,
                     nome: null,
                     email: null,
-                    usuarioId: this.$store.state.usuario.id
                 },
             }
         },

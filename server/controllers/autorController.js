@@ -1,4 +1,5 @@
 import db from '../database.js'
+import index from '../index.js'
 
 class AutorController{
     constructor(){
@@ -17,7 +18,7 @@ class AutorController{
     }
     carregarRegistrosPorUsuario(req, res){
         var sql = "select * from autor where usuarioId = ?"
-        var usuarioId = req.body.usuarioId
+        var usuarioId = index.usuarioId()
 
         db.all(sql, [usuarioId], (err, rows) => {
             if (err) {
@@ -32,7 +33,7 @@ class AutorController{
         let sqlAdd = `INSERT INTO autor (nome, email, usuarioId) VALUES (?,?,?)`
         let nome = req.body.nome
         let email = req.body.email
-        let usuarioId = req.body.usuarioId
+        let usuarioId = index.usuarioId()
         
         db.all(sqlEmail, [email, usuarioId], (err, rows) => {
             if(err)
@@ -59,7 +60,7 @@ class AutorController{
         let id = req.body.id
         let nome = req.body.nome
         let email = req.body.email
-        let usuarioId = req.body.usuarioId
+        let usuarioId = index.usuarioId()
 
         db.all(sqlEmail, [email, usuarioId, id], (err, rows) => {
             if(err)

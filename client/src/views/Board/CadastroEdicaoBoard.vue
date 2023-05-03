@@ -5,7 +5,6 @@
             <div class="card">
                 <div class="card-body" style="padding-top:35px; padding-bottom:30px">
                     <ValidationForm :model="board" ref="validation" @save="salvar(board)">
-
                         <div class="form-group col-10">
                             <label class="form-label col-2" style="margin-right:20px">Nome</label>
                             <div class="col-10" >
@@ -41,7 +40,6 @@
                 board: {
                     id: this.$route.params.codigoBoard,
                     nome: null,
-                    usuarioId: this.$store.state.usuario.id,
                     colunas: []
                 },
                 coluna:{

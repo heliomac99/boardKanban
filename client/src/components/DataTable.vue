@@ -33,7 +33,7 @@
                             <span class="sr-only">Previous</span>
                         </a>
                         </li>
-                        <li class="page-item" v-for="pagina in totalPaginas" :key="pagina" @click="setPage(pagina)" :disabled="pagina === paginaAtual"><a class="page-link" href="#">{{ pagina }}</a></li>
+                        <li class="page-item" v-for="pagina in pages" :key="pagina" @click="setPage(pagina)" :disabled="pagina === paginaAtual"><a class="page-link" href="#">{{ pagina }}</a></li>
                         <li class="page-item">
                         <a @click="nextPage" class="page-link" href="#" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
@@ -71,6 +71,7 @@
                 originalData: null,
                 totalPaginas: 0,
                 paginaAtual: 1,
+                pages: [],
             }
         },
         methods: {
@@ -93,12 +94,14 @@
             nextPage() {
                 if(this.paginaAtual < this.totalPaginas)
                     this.paginaAtual++
+                    this.setShownPages()
                     this.$store.commit('setPagina', this.paginaAtual)
                     this.dataPaginado()
             },
             prevPage() {
                 if(this.paginaAtual > 1){
                     this.paginaAtual--
+                    this.setShownPages()
                     this.$store.commit('setPagina', this.paginaAtual)
                     this.dataPaginado()
                 }
@@ -106,6 +109,7 @@
             setPage(pagina) {
                 if(pagina > 0){
                     this.paginaAtual = pagina
+                    this.setShownPages()
                     this.$store.commit('setPagina', pagina)
                     this.dataPaginado()
                 }
@@ -130,7 +134,14 @@
                         this.dataOp(result)           
                     })
                 } 
-            }
+            },
+            setShownPages(){
+                this.pages = [this.paginaAtual - 1 , this.paginaAtual, this.paginaAtual + 1]
+                    this.pages = this.pages.filter( el => {
+                        return el > 0 && el <= this.totalPaginas
+                })
+            },
+            
         },
         created() {
             this.load()
