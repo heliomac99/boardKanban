@@ -47,23 +47,23 @@ function validaJWT(req, res, next){
 
 app.post("/autor", validaJWT, autorController.index);
 app.post("/autorPorUsuario", validaJWT, autorController.carregarRegistrosPorUsuario);
-app.post('/autor/add', validaJWT, autorController.inserir);
+app.post('/autor/add', validaJWT, autorController.createNovoUsuarioAutor);
 app.post('/autor/update', validaJWT, autorController.editar);
 app.post('/autor/delete', validaJWT, autorController.excluir);
 app.post('/autor/carregarRegistro', validaJWT, autorController.carregarRegistro);
 
-app.post('/coluna/add', validaJWT,colunaController.inserir);
+app.post('/coluna/add', validaJWT,colunaController.createNovaColunaNoBoard);
 app.post('/coluna/alteraCor', validaJWT,colunaController.alteraCor);
 app.post("/coluna", validaJWT,colunaController.index);
 app.post('/coluna/delete', validaJWT,colunaController.excluir);
 app.post("/coluna/carregarPorBoard", validaJWT,colunaController.carregarRegistrosPorBoard);
 
-app.post('/usuario/add', usuarioController.inserir)
+app.post('/usuario/add', usuarioController.createNovoUsuario)
 app.post('/usuario/validar', usuarioController.login);
 app.get("/usuario", validaJWT, usuarioController.index);
 
 app.get("/card", validaJWT, cardController.index );
-app.post('/card/add', validaJWT, cardController.inserir);
+app.post('/card/add', validaJWT, cardController.createNovoCard);
 app.post('/card/edit', validaJWT, cardController.editar);
 app.post('/card/delete', validaJWT, cardController.excluir);
 app.post('/card/carregarRegistro', validaJWT, cardController.carregarRegistro);
@@ -71,7 +71,7 @@ app.post("/moverCard", validaJWT, cardController.mover);
 
 app.post("/board", validaJWT,boardController.index);
 app.post("/boardPorUsuario",validaJWT, boardController.carregarRegistrosPorUsuario);
-app.post('/board/add', validaJWT, boardController.inserir);
+app.post('/board/add', validaJWT, boardController.createNovaBoardAoUsuario);
 app.post('/board/update', validaJWT, boardController.editar);
 app.post('/board/delete', validaJWT, boardController.excluir);
 app.post('/board/carregarRegistro', validaJWT, boardController.carregarRegistro);

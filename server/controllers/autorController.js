@@ -28,7 +28,7 @@ class AutorController{
             res.send(rows)
         });
     }
-    inserir(req, res){
+    createNovoUsuarioAutor(req, res){
         let sqlEmail = `SELECT * FROM autor Where email = ? and usuarioId = ?`
         let sqlAdd = `INSERT INTO autor (nome, email, usuarioId) VALUES (?,?,?)`
         let nome = req.body.nome

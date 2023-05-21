@@ -28,7 +28,7 @@ class BoardController{
             res.send(rows)
         });
     }
-    inserir(req, res){
+    createNovaBoardAoUsuario(req, res){
         let sql = `INSERT INTO board (nome, usuarioId) VALUES (?,?)`
         let nome = req.body.nome
         let usuarioId = index.usuarioId()

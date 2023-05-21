@@ -17,7 +17,7 @@ class CardController{
             })
             });
     }
-    inserir(req, res){
+    createNovoCard(req, res){
         let sql = `INSERT INTO card (titulo, descricao, autorId, colunaId) VALUES (?,?,?,?)`
         let titulo = req.body.titulo
         let descricao = req.body.descricao
