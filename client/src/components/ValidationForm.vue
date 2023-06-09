@@ -94,8 +94,7 @@
                             }
                         }
                         else if(element.validation === 'email'){
-                            const regexEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-                            if(!regexEmail.test(this.model[element.field])){
+                            if(!this.validaEmailRegex(this.model[element.field])){
                                 this.erros++
                                 this.insereErrorMessageEmail(element.field, element.label)
                             }
@@ -134,12 +133,9 @@
                 } 
         
             },
-            teste() {
-                return true;
-            },
             validaEmailRegex(email) {
                 const regexEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-                return regexEmail.test(this.model[element.field]);
+                return regexEmail.test(email);
             }
         },
         mounted() {
