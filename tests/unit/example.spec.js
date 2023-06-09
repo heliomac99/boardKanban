@@ -38,3 +38,13 @@ describe('Teste Validação dos Formulários', () => {
     expect(result).toBe(true)
   })
 })
+
+describe('Testes de Integração', () => {
+  it('Testa string completamente fora do padrão de email retorna false', () => {
+    const msg = 'new message'
+    const wrapper = shallowMount(ValidationForm, {
+    })
+    const result = wrapper.vm.validaEmailRegex('a')
+    expect(result).toBe(false)
+  })
+})
