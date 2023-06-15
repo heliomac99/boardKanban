@@ -34,3 +34,7 @@ jobs:
         cd ..
         cd server
         npm --force install
+    - name: Testes de Unidade e Integração (Jest)
+      run: |
+        npm run test:unit
+
