@@ -1,6 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
 import ValidationForm from '../../client/src/components/ValidationForm.vue'
-import LoginView from '../../client/src/views/Login/CadastroUsuario.vue'
 
 describe('Teste Validação dos Formulários', () => {
   it('Testa string completamente fora do padrão de email retorna false', () => {
