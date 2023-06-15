@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [9.5.0]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -28,4 +28,9 @@ jobs:
         cache: 'npm'
     - name: Instalação do Projeto
       run: |
+        npm --force install
+        cd client
+        npm --force install
+        cd ..
+        cd server
         npm --force install
