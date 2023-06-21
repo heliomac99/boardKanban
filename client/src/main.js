@@ -13,7 +13,7 @@ import router from './router'
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import VueClickAway from "vue3-click-away";
-import emailjs from 'emailjs-com';
+//import emailjs from 'emailjs-com';
 import store from './vuex'
 import { toast } from 'vue3-toastify';
 
@@ -38,7 +38,7 @@ axios.interceptors.response.use(function (response) {
     if(error.response)
       toast(error.response.data.mensagem, { autoClose:1000, theme: 'light', type: 'error'})
     
-    if(error.request.status == 401) { //token não autorizado
+    if(error.request.status == 401) { //token nï¿½o autorizado
       router.push('/')
       store.commit('logout')
     }
@@ -50,7 +50,7 @@ axios.interceptors.response.use(function (response) {
 createApp(App)
 .component('font-awesome-icon', FontAwesomeIcon)
 .use(store)
-.use(emailjs)
+//.use(emailjs)
 .use(VueClickAway)
 .use(VueSweetalert2)
 .use(VueAxios, axios)
