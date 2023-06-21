@@ -28,7 +28,7 @@ class ColunaController{
             }
         })
     }
-    inserir(req, res){
+    createNovaColunaNoBoard(req, res){
         let sql = `INSERT INTO coluna (nome, ordem, boardId, cor) VALUES (?,?,?, ?)`
         let nome = req.body.nome
         let ordem = req.body.ordem

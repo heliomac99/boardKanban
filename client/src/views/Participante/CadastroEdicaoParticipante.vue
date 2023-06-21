@@ -89,7 +89,7 @@
             recuperarDados() { 
                 axios.post('http://localhost:8000/autor/carregarRegistro', {id: this.participante.id}).then( (result) => {
                     this.participante.email = result.data[0].email
-                    this.participante.nome = result.data[0].nome                
+                    this.participante.nome = result.data[0].nome
                    }
                 )
             },

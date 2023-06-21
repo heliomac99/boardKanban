@@ -16,7 +16,7 @@ class UsuarioController{
             res.json({"data":rows })
        });
     }
-    inserir(req, res){
+    createNovoUsuario(req, res){
         let validacao = `SELECT * FROM usuario where login = ?`
         let sql = `INSERT INTO usuario (login, nome, senha) VALUES (?,?,?)`
         let nome = req.body.nome

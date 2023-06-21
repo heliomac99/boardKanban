@@ -39,6 +39,12 @@
             insereErrorMessageEmail(field, label){
                 document.querySelectorAll('span[name=' + field + ']')[0].innerHTML = label + " inválido"
             },
+            insereErrorMessageSenhaFraca(field, label){
+                document.querySelectorAll('span[name=' + field + ']')[0].innerHTML = label + " fraca. Utilizar 8 caracteres, letras maiúsculos e minúsculas e um caractere especial."
+            },
+            insereErrorMessageSenhaMedia(field, label){
+                document.querySelectorAll('span[name=' + field + ']')[0].innerHTML = label + " media. Utilizar 8 caracteres, letras maiúsculos e minúsculas e um caractere especial."
+            },
             insereErrorMessageMinlength(field, label, length){
                 document.querySelectorAll('span[name=' + field + ']')[0].innerHTML = label + " deve conter pelo menos " + length + " digitos"
             },
@@ -56,6 +62,9 @@
             },
             required(nome, label){
                 this.validations.push({"field": nome, "validation": "required", "label": label})
+            },
+            senha(nome, label) {
+                this.validations.push({"field": nome, "validation": "senha", "label": label})
             },
             email(nome, label){
                 this.validations.push({"field": nome, "validation": "email", "label": label})
@@ -93,9 +102,17 @@
                                 this.insereErrorMessageRequired(element.field, element.label)
                             }
                         }
+                        else if(element.validation === 'senha'){
+                            if (this.validaForçaDaSenha(this.model[element.field]) == 1) {
+                                this.erros++
+                                this.insereErrorMessageSenhaMedia(element.field, element.label)
+                            } else if (this.validaForçaDaSenha(this.model[element.field]) == 0) {
+                                this.erros++
+                                this.insereErrorMessageSenhaFraca(element.field, element.label)
+                            }
+                        }
                         else if(element.validation === 'email'){
-                            const regexEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-                            if(!regexEmail.test(this.model[element.field])){
+                            if(!this.validaEmailRegex(this.model[element.field])){
                                 this.erros++
                                 this.insereErrorMessageEmail(element.field, element.label)
                             }
@@ -133,6 +150,21 @@
                     return true
                 } 
         
+            },
+            validaEmailRegex(email) {
+                const regexEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+                return regexEmail.test(email);
+            },
+            validaForçaDaSenha(senha) {
+                let forca = 0;
+                let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})')
+                let mediumPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))')
+                if(strongPassword.test(senha)) {
+                    forca = 2;
+                } else if(mediumPassword.test(senha)) {
+                    forca = 1;
+                }
+                return forca;
             }
         },
         mounted() {
